@@ -1,3 +1,7 @@
+.LoaderWrapper {
+  margin: 0 auto;
+}
+
 .Loader {
   font-size: 10px;
   margin: 50px auto;
