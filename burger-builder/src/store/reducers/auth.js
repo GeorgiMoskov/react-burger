@@ -2,11 +2,12 @@ import * as AT from '../actions/actionTypes';
 import { updateObject } from '../../shared/utility';
 
 const initialState = {
+  authDidInit: false,
   token: null,
   userId: null,
   error: null,
   loading: false,
-  authRedirect: '/'
+  authRedirect: '/',
 };
 
 const authStart = (state) => {
@@ -15,6 +16,7 @@ const authStart = (state) => {
 
 const authSuccess = (state, action) => {
   return updateObject(state, { 
+    authDidInit: true,
     token: action.token,
     userId: action.userId,
     error: null,
@@ -31,6 +33,7 @@ const authFail = (state, action) => {
 
 const authLogout = (state) => {
   return updateObject(state, {
+    authDidInit: true,
     token: null,
     userId: null
   });
