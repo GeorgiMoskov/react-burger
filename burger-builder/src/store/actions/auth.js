@@ -24,16 +24,19 @@ export const authFail = (error) => {
 };
 
 export const logout = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('expirationDate');
+  localStorage.removeItem('userId');
   return {
-    // TODO: TOMORROW
+    type: AT.AUTH_LOGOUT
   }
 }
 
-export const checkAuthTimeout = (expirationTime) => {
+export const checkAuthTimeout = (expirationTimeInMs) => {
   return dispatch => {
-    setTimeout(()=> {
+    setTimeout(() => {
       dispatch(logout());
-    }, expirationTime);
+    }, expirationTimeInMs);
   };
 };
 
@@ -57,7 +60,13 @@ export const auth = (email, password, isRegister) => {
     axios.post(url, authData)
       .then(response => {
         console.log('AUTH ACTION => auth => response => ', response);
-        dispatch(checkAuthTimeout(response.data.expiresIn));
+        const expireAfterMs = response.data.expiresIn * 1000;
+        const expirationDate = new Date(new Date().getTime() + expireAfterMs);
+        localStorage.setItem('token', response.data.idToken);
+        localStorage.setItem('expirationDate', expirationDate);
+        localStorage.setItem('userId', response.data.localId);
+
+        dispatch(checkAuthTimeout(expireAfterMs));
         dispatch(authSuccess(response.data.idToken, response.data.localId));
       })
       .catch(error => {
@@ -66,3 +75,28 @@ export const auth = (email, password, isRegister) => {
       })
   }
 }
+
+export const setAuthRedirectPath = (path) => {
+  return {
+    type: AT.SET_AUTH_REDIRECT_PATH,
+    path: path
+  }
+};
+
+export const authCheckState = () => {
+  return dispatch => {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    if(!token || !userId) {
+      return dispatch(logout());
+    }
+
+    const expirationDate = new Date(localStorage.getItem('expirationDate'));
+    if(expirationDate <= new Date()) {
+      return dispatch(logout());
+    }
+
+    dispatch(authSuccess(token, userId));
+    dispatch(checkAuthTimeout(expirationDate.getTime() - new Date().getTime()));
+  };
+};
