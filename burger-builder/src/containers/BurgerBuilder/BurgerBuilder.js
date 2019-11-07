@@ -14,23 +14,20 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 class BurgerBuilder extends Component {
   state = {
-    purchasing: false,
-    // TODO: DELETE
-    // loading: false,
-    // error: false
+    isPurchaseInProgress: false
   };
 
   componentDidMount() {
     this.props.onInitIngredients();
   }
 
-  updatePurchaseState = (ingredients) => {
-    const sum = Object.keys(ingredients)
-      .map(igKey => {
-        return ingredients[igKey];
+  checkIsPurchasable = (ingredients) => {
+    const sum = Object.keys({...ingredients})
+      .map(ingKey => {
+        return ingredients[ingKey];
       })
-      .reduce((sum, igAmount) => { 
-        return sum + igAmount
+      .reduce((sum, ingAmount) => { 
+        return sum + ingAmount
       }, 0)
 
       return sum > 0;
@@ -42,29 +39,27 @@ class BurgerBuilder extends Component {
       return this.props.history.push('/auth');
     }
     this.setState({
-      purchasing: true
+      isPurchaseInProgress: true
     });
   }
 
   purchaseCancelHandler = () => {
     this.setState({
-      purchasing: false
+      isPurchaseInProgress: false
     })
   }
 
   purchaseContinueHandler = () => {
+    //TODO: CHECK ON INIT PURCHASE
     this.props.onInitPurchase();
     this.props.history.push('/checkout');
   }
 
   render() {
-    const disabledInfo = {
-      ...this.props.ingredients,
-    };
-
-    for (let key in disabledInfo) {
-      disabledInfo[key] = disabledInfo[key] <= 0;
-    }
+    const disableRemoveIngsData = {};
+    Object.keys({...this.props.ingredients}).forEach(ingKey => {
+      disableRemoveIngsData[ingKey] = this.props.ingredients[ingKey] <= 0;
+    });
 
     let orderSummary = null;
 
@@ -75,30 +70,28 @@ class BurgerBuilder extends Component {
         <Aux>
           <Burger ingredients={this.props.ingredients} />
           <BuildControls
-              ingredientAdded={this.props.onIngredientAdded}
-              ingredientRemoved={this.props.onIngredientRemoved}
-              disabledInfo={disabledInfo}
-              price={this.props.totalPrice}
-              purchasable={this.updatePurchaseState(this.props.ingredients)}
-              ordered={this.purchaseHandler}
-              isAuth={this.props.isAuth} />
+            ingredients={this.props.ingredients}
+            onIngredientAdded={this.props.onIngredientAdded}
+            onIngredientRemoved={this.props.onIngredientRemoved}
+            disableRemoveIngsData ={disableRemoveIngsData}
+            price={this.props.totalPrice}
+            isPurchasable={this.checkIsPurchasable(this.props.ingredients)}
+            onOrdered={this.purchaseHandler}
+            isAuth={this.props.isAuth} />
         </Aux>
       );
 
+      //FIXME: change handlers to ON
       orderSummary = <OrderSummary
         ingredients={this.props.ingredients}
         price={this.props.totalPrice}
         purchaseCancelled={this.purchaseCancelHandler}
         purchaseContinue={this.purchaseContinueHandler} />
     }
-    // TODO: DELETE
-    // if(this.state.loading) {
-    //   orderSummary = <Spinner />
-    // }
 
     return (
       <Aux>
-        <Modal show={this.state.purchasing} modalClosed={this.purchaseCancelHandler}>
+        <Modal show={this.state.isPurchaseInProgress} modalClosed={this.purchaseCancelHandler}>
           {orderSummary}
         </Modal>
         {burger}
@@ -118,7 +111,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onIngredientAdded: (ingredientName) => dispatch(actions.addIngredient(ingredientName)),
+    onIngredientAdded: (ingredientKey) => dispatch(actions.addIngredient(ingredientKey)),
     onIngredientRemoved: (ingredientName) => dispatch(actions.removeIngredient(ingredientName)),
     onInitIngredients: () => dispatch(actions.initIngredients()),
     onInitPurchase: () => dispatch(actions.purchaseInit()),

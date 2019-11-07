@@ -59,7 +59,6 @@ export const auth = (email, password, isRegister) => {
 
     axios.post(url, authData)
       .then(response => {
-        console.log('AUTH ACTION => auth => response => ', response);
         const expireAfterMs = response.data.expiresIn * 1000;
         const expirationDate = new Date(new Date().getTime() + expireAfterMs);
         localStorage.setItem('token', response.data.idToken);
@@ -70,7 +69,6 @@ export const auth = (email, password, isRegister) => {
         dispatch(authSuccess(response.data.idToken, response.data.localId));
       })
       .catch(error => {
-        console.log('AUTH ACTION => auth => error => ', error.response.data.error.message);
         dispatch(authFail(error.response.data.error));
       })
   }
