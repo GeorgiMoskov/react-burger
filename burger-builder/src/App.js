@@ -13,10 +13,6 @@ const AsyncOrders = asyncComponent(() => import('./containers/Orders/Orders'));
 const AsyncAuth = asyncComponent(() => import('./containers/Auth/Auth'));
 
 class App extends Component {
-  // constructor(props) {
-  //   super(props);
-  //   this.props.initAuthState();
-  // }
 
   componentDidMount() {
     this.props.initAuthState();
@@ -24,32 +20,35 @@ class App extends Component {
 
 
   render() {
+    let routes = null;
 
-    let routes = (
-      <Switch>
-        <Route path="/auth" component={AsyncAuth} />
-        <Route path="/" exact component={BurgerBuilder} />
-        <Redirect to="/" />
-      </Switch>
-    );
-
-    if(this.props.isAuth) {
-      routes =(
+    if(this.props.authDidInit) {
+      routes = (
         <Switch>
-           <Route path="/checkout" component={AsyncCheckout} />
-           <Route path="/orders" component={AsyncOrders} />
-           <Route path="/logout" component={Logout} />
-           <Route path="/auth" component={AsyncAuth} />
-           <Route path="/" exact component={BurgerBuilder} />
-           <Redirect to="/" />
+          <Route path="/auth" component={AsyncAuth} />
+          <Route path="/" exact component={BurgerBuilder} />
+          <Redirect to="/" />
         </Switch>
       );
+      
+      if(this.props.isAuth) {
+        routes =(
+          <Switch>
+             <Route path="/checkout" component={AsyncCheckout} />
+             <Route path="/orders" component={AsyncOrders} />
+             <Route path="/logout" component={Logout} />
+             <Route path="/auth" component={AsyncAuth} />
+             <Route path="/" exact component={BurgerBuilder} />
+             <Redirect to="/" />
+          </Switch>
+        );
+      }
     }
 
     return (
       <div>
         <Layout>
-          {routes}
+            {routes}
         </Layout>
       </div>
     );
@@ -58,13 +57,14 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
+    authDidInit: state.auth.authDidInit,
     isAuth: state.auth.token !== null
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    initAuthState: () => dispatch(actions.authCheckState())
+    initAuthState: () => dispatch(actions.initAuthState())
   };
 };
 
