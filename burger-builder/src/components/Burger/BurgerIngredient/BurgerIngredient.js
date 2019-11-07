@@ -38,6 +38,19 @@ class BurgerIngredient extends Component {
         ingredient = <div className={classes.Bacon}></div>;
         break;
 
+        case ING.SALAMI:
+          const randSalamiFatNumber = Math.floor(Math.random() * (6 - 4 + 1) ) + 4;
+          const salamiFats = [...Array(randSalamiFatNumber)].map((_, index) => {
+            return <div key={index} className={classes.SalamiFat}></div>
+          })
+
+          ingredient = (
+            <div className={classes.Salami}>
+              {salamiFats}
+            </div>
+          );
+          break;
+
       default:
         ingredient = null;
     }
