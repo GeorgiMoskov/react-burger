@@ -1,19 +1,12 @@
 import * as AT from '../actions/actionTypes';
-import * as ING from '../../constants/burger/ingredients/ingredients';
 import { updateObject } from '../../shared/utility';
 
 const initialState = {
   ingredients: null,
+  ingredientsPrice: null,
   totalPrice: 4,
   error: false,
   building: false
-};
-
-const INGREDIENT_PRICES = {
-  [ING.SALAD]: 0.5,
-  [ING.CHEESE]: 0.4,
-  [ING.MEAT]: 1.3,
-  [ING.BACON]: 0.7
 };
 
 const addIngredient = (state, action) => {
@@ -21,7 +14,7 @@ const addIngredient = (state, action) => {
   const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
   const updatedState = {
     ingredients: updatedIngredients,
-    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientKey],
+    totalPrice: state.totalPrice + state.ingredientsPrice[action.ingredientKey],
     building: true
   }
   return updateObject(state, updatedState);
@@ -32,7 +25,7 @@ const removeIngredient = (state, action) => {
   const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
   const updatedStateProps = {
     ingredients: updatedIngredients,
-    totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientKey]
+    totalPrice: state.totalPrice - state.ingredientsPrice[action.ingredientKey]
   }
   return updateObject(state, updatedStateProps);
 }
@@ -40,6 +33,7 @@ const removeIngredient = (state, action) => {
 const setIngredients = (state, action) => {
   return updateObject(state, {
     ingredients: action.ingredients,
+    ingredientsPrice: action.ingredientsPrice,
     totalPrice: 4,
     error: false,
     building: false
