@@ -33,27 +33,26 @@ export const fetchIngredientsFailed = () => {
 const mapResIngredients = (resIngredients) => {
   const ingredients = {};
   const unknownIngredients = [];
-    Object.keys({...resIngredients}).forEach(resIngredientKey => {
-      if(resIngredientKey === API_ING.MEAT) {
-        return ingredients[ING.MEAT] = resIngredients[resIngredientKey];
+
+  Object.keys({...resIngredients}).forEach(resIngredientKey => {
+    let isUnknownIngredient = true;
+    Object.keys({...API_ING}).forEach(apiIngKey => {
+      if(resIngredientKey === API_ING[apiIngKey]) {
+        ingredients[apiIngKey] = resIngredients[resIngredientKey];
+        isUnknownIngredient = false;
       }
-      if(resIngredientKey === API_ING.CHEESE) {
-        return ingredients[ING.CHEESE] = resIngredients[resIngredientKey];
-      }
-      if(resIngredientKey === API_ING.SALAD) {
-        return ingredients[ING.SALAD] = resIngredients[resIngredientKey];
-      }
-      if(resIngredientKey === API_ING.BACON) {
-        return ingredients[ING.BACON] = resIngredients[resIngredientKey];
-      }
-      unknownIngredients.push(resIngredientKey);
     });
 
-    axios.post('/logs/unknownIngredients.json', unknownIngredients)
-        .then()
-        .catch(error => console.error(error));
+    if(isUnknownIngredient) {
+      unknownIngredients.push(resIngredientKey);
+    }
+  });
 
-    return ingredients;
+  axios.post('/logs/unknownIngredients.json', unknownIngredients)
+      .then()
+      .catch(error => console.error(error));
+  
+  return ingredients;
 }
 
 export const initIngredients = () => {
