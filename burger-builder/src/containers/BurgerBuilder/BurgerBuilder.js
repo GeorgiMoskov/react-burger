@@ -50,7 +50,7 @@ class BurgerBuilder extends Component {
   }
 
   purchaseContinueHandler = () => {
-    //TODO: CHECK ON INIT PURCHASE
+    //TODO: IMPROVE ON INIT PURCHASE
     this.props.onInitPurchase();
     this.props.history.push('/checkout');
   }
@@ -81,17 +81,16 @@ class BurgerBuilder extends Component {
         </Aux>
       );
 
-      //FIXME: change handlers to ON
       orderSummary = <OrderSummary
         ingredients={this.props.ingredients}
         price={this.props.totalPrice}
-        purchaseCancelled={this.purchaseCancelHandler}
-        purchaseContinue={this.purchaseContinueHandler} />
+        onPurchaseCancelled={this.purchaseCancelHandler}
+        onPurchaseContinue={this.purchaseContinueHandler} />
     }
 
     return (
       <Aux>
-        <Modal show={this.state.isPurchaseInProgress} modalClosed={this.purchaseCancelHandler}>
+        <Modal show={this.state.isPurchaseInProgress} onModalClosed={this.purchaseCancelHandler}>
           {orderSummary}
         </Modal>
         {burger}
@@ -112,7 +111,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onIngredientAdded: (ingredientKey) => dispatch(actions.addIngredient(ingredientKey)),
-    onIngredientRemoved: (ingredientName) => dispatch(actions.removeIngredient(ingredientName)),
+    onIngredientRemoved: (ingredientKey) => dispatch(actions.removeIngredient(ingredientKey)),
     onInitIngredients: () => dispatch(actions.initIngredients()),
     onInitPurchase: () => dispatch(actions.purchaseInit()),
     onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))

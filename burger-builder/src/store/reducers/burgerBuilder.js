@@ -27,15 +27,14 @@ const addIngredient = (state, action) => {
   return updateObject(state, updatedState);
 }
 
-// FIXME: ingredientName set to ingredientKey => CHECK LOGIC
 const removeIngredient = (state, action) => {
-  const updatedIngredient = { [action.ingredientName]: state.ingredients[action.ingredientName] - 1 }
+  const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] - 1 }
   const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
-  const updatedSt = {
+  const updatedStateProps = {
     ingredients: updatedIngredients,
-    totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
+    totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientKey]
   }
-  return updateObject(state, updatedSt);
+  return updateObject(state, updatedStateProps);
 }
 
 const setIngredients = (state, action) => {

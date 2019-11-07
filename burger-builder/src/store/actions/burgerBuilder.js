@@ -10,11 +10,10 @@ export const addIngredient = (ingredientKey) => {
   };
 };
 
-// FIXME: ingredientName to Key
-export const removeIngredient = (ingredientName) => {
+export const removeIngredient = (ingredientKey) => {
   return {
     type: AT.REMOVE_INGREDIENT,
-    ingredientName: ingredientName
+    ingredientKey: ingredientKey
   };
 };
 
