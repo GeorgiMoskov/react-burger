@@ -1,4 +1,5 @@
 import * as AT from '../actions/actionTypes';
+import * as ING from '../../constants/burger/ingredients/ingredients';
 import { updateObject } from '../../shared/utility';
 
 const initialState = {
@@ -9,23 +10,24 @@ const initialState = {
 };
 
 const INGREDIENT_PRICES = {
-  salad: 0.5,
-  cheese: 0.4,
-  meat: 1.3,
-  bacon: 0.7
+  [ING.SALAD]: 0.5,
+  [ING.CHEESE]: 0.4,
+  [ING.MEAT]: 1.3,
+  [ING.BACON]: 0.7
 };
 
 const addIngredient = (state, action) => {
-  const updatedIngredient = { [action.ingredientName]: state.ingredients[action.ingredientName] + 1 }
+  const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] + 1 }
   const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
   const updatedState = {
     ingredients: updatedIngredients,
-    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientKey],
     building: true
   }
   return updateObject(state, updatedState);
 }
 
+// FIXME: ingredientName set to ingredientKey => CHECK LOGIC
 const removeIngredient = (state, action) => {
   const updatedIngredient = { [action.ingredientName]: state.ingredients[action.ingredientName] - 1 }
   const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
@@ -38,12 +40,7 @@ const removeIngredient = (state, action) => {
 
 const setIngredients = (state, action) => {
   return updateObject(state, {
-    ingredients: {
-      salad: action.ingredients.salad,
-      bacon: action.ingredients.bacon,
-      cheese: action.ingredients.cheese,
-      meat: action.ingredients.meat
-    },
+    ingredients: action.ingredients,
     totalPrice: 4,
     error: false,
     building: false
