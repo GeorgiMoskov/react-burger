@@ -1,5 +1,4 @@
 import * as AT from '../actions/actionTypes';
-import * as ING from '../../constants/burger/ingredients/ingredients';
 import * as API_ING from '../../constants/burger/ingredients/api.ingredients';
 import axios from '../../axios-orders';
 
@@ -17,10 +16,11 @@ export const removeIngredient = (ingredientKey) => {
   };
 };
 
-export const setIngredients = (ingredients) => {
+export const setIngredients = (ingredients, ingredientsPrice) => {
   return {
     type: AT.SET_INGREDIENTS,
-    ingredients: ingredients
+    ingredients: ingredients,
+    ingredientsPrice: ingredientsPrice
   }
 }
 
@@ -32,36 +32,37 @@ export const fetchIngredientsFailed = () => {
 
 const mapResIngredients = (resIngredients) => {
   const ingredients = {};
+  const ingredientsPrice = {};
   const unknownIngredients = [];
-    Object.keys({...resIngredients}).forEach(resIngredientKey => {
-      if(resIngredientKey === API_ING.MEAT) {
-        return ingredients[ING.MEAT] = resIngredients[resIngredientKey];
+
+  resIngredients.forEach(resIngredientObj => {
+    let isUnknownIngredient = true;
+    Object.keys({...API_ING}).forEach(apiIngKey => {
+      if(resIngredientObj.type === API_ING[apiIngKey]) {
+        ingredients[apiIngKey] = resIngredientObj.amount;
+        ingredientsPrice[apiIngKey] = resIngredientObj.price;
+        isUnknownIngredient = false;
       }
-      if(resIngredientKey === API_ING.CHEESE) {
-        return ingredients[ING.CHEESE] = resIngredients[resIngredientKey];
-      }
-      if(resIngredientKey === API_ING.SALAD) {
-        return ingredients[ING.SALAD] = resIngredients[resIngredientKey];
-      }
-      if(resIngredientKey === API_ING.BACON) {
-        return ingredients[ING.BACON] = resIngredients[resIngredientKey];
-      }
-      unknownIngredients.push(resIngredientKey);
     });
 
-    axios.post('/logs/unknownIngredients.json', unknownIngredients)
-        .then()
-        .catch(error => console.error(error));
+    if(isUnknownIngredient) {
+      unknownIngredients.push(resIngredientObj.value);
+    }
+  });
 
-    return ingredients;
+  axios.post('/logs/unknownIngredients.json', unknownIngredients)
+      .then()
+      .catch(error => console.error(error));
+
+  return { ingredients, ingredientsPrice };
 }
 
 export const initIngredients = () => {
   return dispatch => {
     axios.get('/ingredients.json')
       .then(res => {
-        const ingredients = mapResIngredients(res.data);
-        dispatch(setIngredients(ingredients));
+        const ingsData = mapResIngredients(res.data);
+        dispatch(setIngredients(ingsData.ingredients, ingsData.ingredientsPrice));
       })
       .catch(error => {
         dispatch(fetchIngredientsFailed());
