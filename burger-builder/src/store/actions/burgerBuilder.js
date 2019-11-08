@@ -46,7 +46,7 @@ const mapResIngredients = (resIngredients) => {
     });
 
     if(isUnknownIngredient) {
-      unknownIngredients.push(resIngredientObj.value);
+      unknownIngredients.push(resIngredientObj.type);
     }
   });
 
