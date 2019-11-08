@@ -1,47 +1,53 @@
 import * as AT from '../actions/actionTypes';
 import { updateObject } from '../../shared/utility';
 
-const initialState = {
+import { Map } from 'immutable';
+
+const initialState = Map({
   ingredients: null,
   ingredientsPrice: null,
   totalPrice: 4,
   error: false,
-  building: false
-};
+  isBuilding: false
+});
 
 const addIngredient = (state, action) => {
-  const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] + 1 }
-  const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
-  const updatedState = {
-    ingredients: updatedIngredients,
-    totalPrice: state.totalPrice + state.ingredientsPrice[action.ingredientKey],
-    building: true
-  }
-  return updateObject(state, updatedState);
+  console.error('REWORK : addIngredient - reducer');
+  // const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] + 1 }
+  // const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+  // const updatedState = {
+  //   ingredients: updatedIngredients,
+  //   totalPrice: state.totalPrice + state.ingredientsPrice[action.ingredientKey],
+  //   building: true
+  // }
+  // return updateObject(state, updatedState);
 }
 
 const removeIngredient = (state, action) => {
-  const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] - 1 }
-  const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
-  const updatedStateProps = {
-    ingredients: updatedIngredients,
-    totalPrice: state.totalPrice - state.ingredientsPrice[action.ingredientKey]
-  }
-  return updateObject(state, updatedStateProps);
+  console.error('REWORK - removeIngredient - reducer');
+  // const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] - 1 }
+  // const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
+  // const updatedStateProps = {
+  //   ingredients: updatedIngredients,
+  //   totalPrice: state.totalPrice - state.ingredientsPrice[action.ingredientKey]
+  // }
+  // return updateObject(state, updatedStateProps);
 }
 
 const setIngredients = (state, action) => {
-  return updateObject(state, {
-    ingredients: action.ingredients,
-    ingredientsPrice: action.ingredientsPrice,
-    totalPrice: 4,
-    error: false,
-    building: false
-  });
+  console.error('REWORK - setIngredients - reducer');
+  // return updateObject(state, {
+  //   ingredients: action.ingredients,
+  //   ingredientsPrice: action.ingredientsPrice,
+  //   totalPrice: 4,
+  //   error: false,
+  //   building: false
+  // });
 } 
 
 const fetchIngredientsFailed = (state) => {
-  return updateObject(state, { error: true });
+  console.error('REWORK - fetchIngredientsFailed - reducer');
+  // return updateObject(state, { error: true });
 }
 
 

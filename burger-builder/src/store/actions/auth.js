@@ -8,6 +8,7 @@ export const authStart = () => {
   };
 };
 
+//CHECKED
 export const authSuccess = (token, userId) => {
   return {
     type: AT.AUTH_SUCCESS,
@@ -23,6 +24,7 @@ export const authFail = (error) => {
   };
 };
 
+//CHECKED
 export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('expirationDate');
@@ -32,6 +34,7 @@ export const logout = () => {
   }
 }
 
+//CHECKED
 export const startAuthTimeout = (expirationTimeInMs) => {
   return dispatch => {
     setTimeout(() => {
@@ -74,18 +77,20 @@ export const auth = (email, password, isRegister) => {
   }
 }
 
-export const setAuthRedirectPath = (path) => {
+export const setAfterAuthRedirectPath = (path) => {
   return {
-    type: AT.SET_AUTH_REDIRECT_PATH,
+    type: AT.SET_AFTER_AUTH_REDIRECT_PATH,
     path: path
   }
 };
 
+// CHECKED
 export const initAuthState = () => {
   return dispatch => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     const expirationDateStr = localStorage.getItem('expirationDate');
+
     if(!token || !userId || !expirationDateStr) {
       return dispatch(logout());
     }

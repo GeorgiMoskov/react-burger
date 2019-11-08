@@ -10,60 +10,64 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import classes from './Auth.css';
 import * as actions from '../../store/actions/index';
 
+import { Map, fromJS } from 'immutable';
+ 
 
 class Auth extends Component {
+
   state = {
-    controls: {
-      email: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'email',
-          placeholder: 'Mail Address'
+    data: Map(fromJS({
+      controls: {
+        email: {
+          elementType: 'input',
+          elementConfig: {
+            type: 'email',
+            placeholder: 'Mail Address'
+          },
+          value: '',
+          validation: {
+            required: true,
+            isEmail: true
+          },
+          valid: false,
+          touched: false
         },
-        value: '',
-        validation: {
-          required: true,
-          isEmail: true
-        },
-        valid: false,
-        touched: false
+        password: {
+          elementType: 'input',
+          elementConfig: {
+            type: 'password',
+            placeholder: 'Password'
+          },
+          value: '',
+          validation: {
+            required: true,
+            minLength: 6
+          },
+          valid: false,
+          touched: false
+        }
       },
-      password: {
-        elementType: 'input',
-        elementConfig: {
-          type: 'password',
-          placeholder: 'Password'
-        },
-        value: '',
-        validation: {
-          required: true,
-          minLength: 6
-        },
-        valid: false,
-        touched: false
-      }
-    },
-    isRegister: true
-  }
+      isRegister: true
+    }))
+  };
 
   componentDidMount() {
-    if(!this.props.buildingBurger && this.props.authRedirectPath !== '/') {
-      this.props.onSetAuthRedirectPath();
+    if(!this.props.isBuildingBurger && this.props.afterAuthRedirectPath !== '/') {
+      this.props.setAfterAuthRedirectPath();
     }
   }
 
   inputChangedHandler = (event, controlName) => {
-    const updatedControls = {
-      ...this.state.controls,
-      [controlName]: {
-        ...this.state.controls[controlName],
-        value: event.target.value,
-        valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
-        touched: true
+    const newStateData = this.state.data.mergeDeep({
+      controls: {
+        [controlName]: {
+          value: event.target.value,
+          valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
+          touched: true
+        }
       }
-    };
-
-    this.setState({controls: updatedControls});
+    });
+    this.setState({data: newStateData});
   }
 
   submitHandler = (event) => {
@@ -79,6 +83,32 @@ class Auth extends Component {
   
   render () {
 
+    // const [...controlsKeys] = this.state.data.get('controls').keys();
+    // const formElementsConfigs = controlsKeys.map(controlKey => {
+    //   return Map({
+    //     id: controlKey,
+    //     config: this.state.data.get('controls')[controlKey].get('elementConfig')
+    //   })
+    // });
+
+    let form1 = this.state.data.get('controls')
+      .entrySeq().map(([controlType, config]) => (
+        <Input
+          key={controlType}
+          elementType={config.get('elementType')}
+          elementConfig={config.get('elementConfig')}
+          value={config.get('value')}
+          invalid={!config.get('valid')}
+          shouldValidate={config.get('validation')}
+          touched={config.get('touched')}
+          changed={(event)=>{this.inputChangedHandler(event, controlType)}}/>
+      ))
+
+
+    // this.state.data.get('controls').entrySeq().forEach(([controlType, config])  => {
+    //   console.log('$', controlType, config);
+    // })
+      
     const formElementsArray = [];
     for(let key in this.state.controls) {
       formElementsArray.push({
@@ -122,7 +152,7 @@ class Auth extends Component {
         <div className={classes.Auth}>
           {errorMessage}
           <form onSubmit={this.submitHandler}>
-            {form}
+            {form1}
             <Button buttonType="Success" >Submit</Button>
           </form>
           <Button 
@@ -136,18 +166,18 @@ class Auth extends Component {
 
 const mapStateToProps = state => {
   return {
-    loading: state.auth.loading,
-    error: state.auth.error,
-    isAuth: state.auth.token !== null,
-    buildingBurger: state.burgerBuilder.building,
-    authRedirectPath: state.auth.authRedirect
+    loading: state.auth.get('loading'),
+    error: state.auth.get('error'),
+    isAuth: state.auth.get('token') !== null,
+    isBuildingBurger: state.burgerBuilder.get('isBuilding'),
+    afterAuthRedirectPath: state.auth.get('afterAuthRedirectPath')
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     onAuth: (email, password, isRegister) => dispatch(actions.auth(email, password, isRegister)),
-    onSetAuthRedirectPath: () => dispatch(actions.setAuthRedirectPath('/'))
+    setAfterAuthRedirectPath: () => dispatch(actions.setAfterAuthRedirectPath('/'))
   };
 }
 

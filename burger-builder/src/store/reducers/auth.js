@@ -1,48 +1,56 @@
 import * as AT from '../actions/actionTypes';
 import { updateObject } from '../../shared/utility';
 
-const initialState = {
+import { Map } from 'immutable';
+
+
+const initialState = Map({
   authDidInit: false,
   token: null,
   userId: null,
   error: null,
   loading: false,
-  authRedirect: '/',
-};
+  afterAuthRedirectPath: '/',
+});
 
 const authStart = (state) => {
-  return updateObject(state, { error: null, loading: true });
+  console.error('REWORK - authStart - reducer');
+  // return updateObject(state, { error: null, loading: true });
 };
 
-const authSuccess = (state, action) => {
-  return updateObject(state, { 
+//CHECKED - REWORKED
+const authSuccess = (state, {token, userId}) => {
+  return state.mergeDeep({
     authDidInit: true,
-    token: action.token,
-    userId: action.userId,
+    token: token,
+    userId: userId,
     error: null,
     loading: false
-   });
+  })
 };
 
 const authFail = (state, action) => {
-  return updateObject(state, {
-    loading: false,
-    error: action.error
-  })
+  console.error('REWORK - authFail - reducer');
+  // return updateObject(state, {
+  //   loading: false,
+  //   error: action.error
+  // })
 }
 
+//CHECKED - REWORKED
 const authLogout = (state) => {
-  return updateObject(state, {
+  return state.mergeDeep({
     authDidInit: true,
     token: null,
     userId: null
   });
 };
 
-const setAuthRedirectPath = (state, action) => {
-  return updateObject(state, {
-    authRedirect: action.path
-  })
+//CHECKED - REWORKED
+const setAfterAuthRedirectPath = (state, {path}) => {
+  return state.mergeDeep({
+    afterAuthRedirectPath: path
+  });
 }
 
 const reducer = (state = initialState, action) => {
@@ -55,7 +63,7 @@ const reducer = (state = initialState, action) => {
 
     case AT.AUTH_LOGOUT: return authLogout(state);
 
-    case AT.SET_AUTH_REDIRECT_PATH: return setAuthRedirectPath(state, action);
+    case AT.SET_AFTER_AUTH_REDIRECT_PATH: return setAfterAuthRedirectPath(state, action);
 
     default: return state;
   }

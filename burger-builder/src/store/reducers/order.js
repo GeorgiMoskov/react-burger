@@ -8,39 +8,46 @@ const initialState = {
 }
 
 const purchaseInit = (state) => {
-  return updateObject(state, { purchased: false });
+  console.error('REWORK - purchaseInit - reducer');
+  // return updateObject(state, { purchased: false });
 };
 
 const purchaseBurgerStart = (state) => {
-  return updateObject(state, { loading: true });
+  console.error('REWORK - purchaseBurgerStart - reducer');
+  // return updateObject(state, { loading: true });
 };
 
 const purchaseBurgerSuccess = (state, action) => {
-  const newOrder = updateObject(action.orderData, { id: action.orderId })
-  return updateObject(state, {
-    loading: false,
-    purchased: true,
-    orders: state.orders.concat(newOrder)
-  });
+  console.error('REWORK - purchaseBurgerSuccess - reducer');
+  // const newOrder = updateObject(action.orderData, { id: action.orderId })
+  // return updateObject(state, {
+  //   loading: false,
+  //   purchased: true,
+  //   orders: state.orders.concat(newOrder)
+  // });
 };
 
 const purchaseBurgerFail = (state) => {
-  return updateObject(state, { loading: false });
+  console.error('REWORK - purchaseBurgerFail - reducer');
+  // return updateObject(state, { loading: false });
 };
 
 const fetchOrdersStart = (state) => {
-  return updateObject(state, { loading: true });
+  console.error('REWORK - fetchOrdersStart - reducer');
+  // return updateObject(state, { loading: true });
 };
 
 const fetchOrdersSuccess = (state, action) => {
-  return updateObject(state, {
-    orders: action.orders,
-    loading: false
-  });
+  console.error('REWORK - fetchOrdersSuccess - reducer');
+  // return updateObject(state, {
+  //   orders: action.orders,
+  //   loading: false
+  // });
 };
 
 const fetchOrdersFail = (state) => {
-  return updateObject(state, { loading: false });
+  console.error('REWORK - fetchOrdersFail - reducer');
+  // return updateObject(state, { loading: false });
 };
 
 const reducer = (state = initialState, action) => {

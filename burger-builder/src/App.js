@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import asyncComponent from './hoc/asyncComponent/asyncComponent';
 import * as actions from './store/actions/index';
@@ -26,22 +26,23 @@ class App extends Component {
       routes = (
         <Switch>
           <Route path="/auth" component={AsyncAuth} />
-          <Route path="/" exact component={BurgerBuilder} />
-          <Redirect to="/" />
+          {/*TODO: ORIGINAL <Route path="/" exact component={BurgerBuilder} /> */}
+          {/*TODO: ORIGINAL <Redirect to="/" /> */}
         </Switch>
       );
       
       if(this.props.isAuth) {
-        routes =(
-          <Switch>
-             <Route path="/checkout" component={AsyncCheckout} />
-             <Route path="/orders" component={AsyncOrders} />
-             <Route path="/logout" component={Logout} />
-             <Route path="/auth" component={AsyncAuth} />
-             <Route path="/" exact component={BurgerBuilder} />
-             <Redirect to="/" />
-          </Switch>
-        );
+        // TODO: ORIGINAL
+        // routes =(
+        //   <Switch>
+        //      <Route path="/checkout" component={AsyncCheckout} />
+        //      <Route path="/orders" component={AsyncOrders} />
+        //      <Route path="/logout" component={Logout} />
+        //      <Route path="/auth" component={AsyncAuth} />
+        //      <Route path="/" exact component={BurgerBuilder} />
+        //      <Redirect to="/" />
+        //   </Switch>
+        // );
       }
     }
 
@@ -57,8 +58,8 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    authDidInit: state.auth.authDidInit,
-    isAuth: state.auth.token !== null
+    authDidInit: state.auth.get('authDidInit'),
+    isAuth: state.auth.get('token') !== null
   }
 }
 

@@ -17,11 +17,12 @@ export const removeIngredient = (ingredientKey) => {
 };
 
 export const setIngredients = (ingredients, ingredientsPrice) => {
-  return {
-    type: AT.SET_INGREDIENTS,
-    ingredients: ingredients,
-    ingredientsPrice: ingredientsPrice
-  }
+  console.error('REWORK - setIngredients - action');
+  // return {
+  //   type: AT.SET_INGREDIENTS,
+  //   ingredients: ingredients,
+  //   ingredientsPrice: ingredientsPrice
+  // }
 }
 
 export const fetchIngredientsFailed = () => {
@@ -31,41 +32,44 @@ export const fetchIngredientsFailed = () => {
 }
 
 const mapResIngredients = (resIngredients) => {
-  const ingredients = {};
-  const ingredientsPrice = {};
-  const unknownIngredients = [];
+  console.error('REWORK - mapResIngredients - helper func - action');
+  // const ingredients = {};
+  // const ingredientsPrice = {};
+  // const unknownIngredients = [];
 
-  resIngredients.forEach(resIngredientObj => {
-    let isUnknownIngredient = true;
-    Object.keys({...API_ING}).forEach(apiIngKey => {
-      if(resIngredientObj.type === API_ING[apiIngKey]) {
-        ingredients[apiIngKey] = resIngredientObj.amount;
-        ingredientsPrice[apiIngKey] = resIngredientObj.price;
-        isUnknownIngredient = false;
-      }
-    });
+  // resIngredients.forEach(resIngredientObj => {
+  //   let isUnknownIngredient = true;
+  //   Object.keys({...API_ING}).forEach(apiIngKey => {
+  //     if(resIngredientObj.type === API_ING[apiIngKey]) {
+  //       ingredients[apiIngKey] = resIngredientObj.amount;
+  //       ingredientsPrice[apiIngKey] = resIngredientObj.price;
+  //       isUnknownIngredient = false;
+  //     }
+  //   });
 
-    if(isUnknownIngredient) {
-      unknownIngredients.push(resIngredientObj.type);
-    }
-  });
+  //   if(isUnknownIngredient) {
+  //     unknownIngredients.push(resIngredientObj.type);
+  //   }
+  // });
 
-  axios.post('/logs/unknownIngredients.json', unknownIngredients)
-      .then()
-      .catch(error => console.error(error));
+  // axios.post('/logs/unknownIngredients.json', unknownIngredients)
+  //     .then()
+  //     .catch(error => console.error(error));
 
-  return { ingredients, ingredientsPrice };
+  // return { ingredients, ingredientsPrice };
 }
 
+
 export const initIngredients = () => {
-  return dispatch => {
-    axios.get('/ingredients.json')
-      .then(res => {
-        const ingsData = mapResIngredients(res.data);
-        dispatch(setIngredients(ingsData.ingredients, ingsData.ingredientsPrice));
-      })
-      .catch(error => {
-        dispatch(fetchIngredientsFailed());
-      });
-  };
+  console.error('REWORK - initIngredients - action');
+  // return dispatch => {
+  //   axios.get('/ingredients.json')
+  //     .then(res => {
+  //       const ingsData = mapResIngredients(res.data);
+  //       dispatch(setIngredients(ingsData.ingredients, ingsData.ingredientsPrice));
+  //     })
+  //     .catch(error => {
+  //       dispatch(fetchIngredientsFailed());
+  //     });
+  // };
 }
