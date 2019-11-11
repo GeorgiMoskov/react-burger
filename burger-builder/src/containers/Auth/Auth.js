@@ -13,43 +13,61 @@ import * as actions from '../../store/actions/index';
 import { Map, fromJS } from 'immutable';
  
 
+const FI = {
+  EMAIL: 'EMAIL',
+  PASSWORD: 'PASSWORD'
+}
+
 class Auth extends Component {
 
+  formConfig = fromJS({
+    [FI.EMAIL]: {
+      elementType: 'input',
+      value: '',
+      valid: false,
+      touched: false,
+      elementConfig: {
+        type: 'email',
+        placeholder: 'Mail Address'
+      },
+      validation: {
+        required: true,
+        isEmail: true
+      },
+    },
+    [FI.PASSWORD]: {
+      elementType: 'input',
+      value: '',
+      valid: false,
+      touched: false,
+      elementConfig: {
+        type: 'password',
+        placeholder: 'Password'
+      },
+      validation: {
+        required: true,
+        minLength: 6
+      }
+    }
+  });
+
   state = {
-    data: Map(fromJS({
+    data: fromJS({
       controls: {
-        email: {
-          elementType: 'input',
-          elementConfig: {
-            type: 'email',
-            placeholder: 'Mail Address'
-          },
-          value: '',
-          validation: {
-            required: true,
-            isEmail: true
-          },
-          valid: false,
-          touched: false
+        [FI.EMAIL]: {
+          value: this.formConfig.get(FI.EMAIL).get('value'),
+          valid: this.formConfig.get(FI.EMAIL).get('valid'),
+          touched: this.formConfig.get(FI.EMAIL).get('touched')
         },
-        password: {
-          elementType: 'input',
-          elementConfig: {
-            type: 'password',
-            placeholder: 'Password'
-          },
-          value: '',
-          validation: {
-            required: true,
-            minLength: 6
-          },
-          valid: false,
-          touched: false
+        [FI.PASSWORD]: {
+          value: this.formConfig.get(FI.PASSWORD).get('value'),
+          valid: this.formConfig.get(FI.PASSWORD).get('valid'),
+          touched: this.formConfig.get(FI.PASSWORD).get('touched')
         }
       },
-      isRegister: true
-    }))
-  };
+      isRegister: false
+    })
+  }
 
   componentDidMount() {
     if(!this.props.isBuildingBurger && this.props.afterAuthRedirectPath !== '/') {
@@ -58,76 +76,46 @@ class Auth extends Component {
   }
 
   inputChangedHandler = (event, controlName) => {
-    const newStateData = this.state.data.mergeDeep({
+    this.setState({data: this.state.data.mergeDeep({
       controls: {
         [controlName]: {
           value: event.target.value,
-          valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
+          valid: checkValidity(event.target.value, this.formConfig.get(controlName).get('validation')),
           touched: true
         }
       }
-    });
-    this.setState({data: newStateData});
+    })});
   }
 
   submitHandler = (event) => {
     event.preventDefault();
-    this.props.onAuth(this.state.controls.email.value, this.state.controls.password.value, this.state.isRegister);
+    const formControls = this.state.data.get('controls');
+    this.props.onAuth(
+      formControls.get(FI.EMAIL).get('value'),
+      formControls.get(FI.PASSWORD).get('value'),
+      this.state.data.get('isRegister')
+    );
   }
 
   switchAuthModeHandler = () => {
-    this.setState(prevState => {
-      return {isRegister: !prevState.isRegister};
+    this.setState({data: 
+      this.state.data.set('isRegister', !this.state.data.get('isRegister'))
     });
   }
   
   render () {
-
-    // const [...controlsKeys] = this.state.data.get('controls').keys();
-    // const formElementsConfigs = controlsKeys.map(controlKey => {
-    //   return Map({
-    //     id: controlKey,
-    //     config: this.state.data.get('controls')[controlKey].get('elementConfig')
-    //   })
-    // });
-
-    let form1 = this.state.data.get('controls')
-      .entrySeq().map(([controlType, config]) => (
+    let form = this.state.data.get('controls')
+      .entrySeq().map(([controlType, stateControlData]) => (
         <Input
           key={controlType}
-          elementType={config.get('elementType')}
-          elementConfig={config.get('elementConfig')}
-          value={config.get('value')}
-          invalid={!config.get('valid')}
-          shouldValidate={config.get('validation')}
-          touched={config.get('touched')}
+          elementType={this.formConfig.get(controlType).get('elementType')}
+          elementConfig={this.formConfig.get(controlType).get('elementConfig')}
+          shouldValidate={Boolean(this.formConfig.get(controlType).get('validation'))}
+          value={stateControlData.get('value')}
+          invalid={!stateControlData.get('valid')}
+          touched={stateControlData.get('touched')}
           changed={(event)=>{this.inputChangedHandler(event, controlType)}}/>
       ))
-
-
-    // this.state.data.get('controls').entrySeq().forEach(([controlType, config])  => {
-    //   console.log('$', controlType, config);
-    // })
-      
-    const formElementsArray = [];
-    for(let key in this.state.controls) {
-      formElementsArray.push({
-        id: key,
-        config: this.state.controls[key]
-      });
-    }
-
-    let form = formElementsArray.map(formElement => (
-      <Input
-        key={formElement.id}
-        elementType={formElement.config.elementType}
-        elementConfig={formElement.config.elementConfig}
-        value={formElement.config.value}
-        invalid={!formElement.config.valid}
-        shouldValidate={formElement.config.validation}
-        touched={formElement.config.touched}
-        changed={(event)=>{this.inputChangedHandler(event, formElement.id)}}/>
-    ));
 
     if(this.props.loading) {
       form = <Spinner />
@@ -152,12 +140,12 @@ class Auth extends Component {
         <div className={classes.Auth}>
           {errorMessage}
           <form onSubmit={this.submitHandler}>
-            {form1}
+            {form}
             <Button buttonType="Success" >Submit</Button>
           </form>
           <Button 
             click={this.switchAuthModeHandler}
-            buttonType="Danger">switch to {this.state.isRegister ? 'Login' : 'Register'}</Button>
+            buttonType="Danger">switch to {this.state.data.get('isRegister') ? 'Login' : 'Register'}</Button>
         </div>
       </React.Fragment>
     );

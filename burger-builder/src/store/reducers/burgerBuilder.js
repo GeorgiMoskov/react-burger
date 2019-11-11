@@ -4,50 +4,48 @@ import { updateObject } from '../../shared/utility';
 import { Map } from 'immutable';
 
 const initialState = Map({
-  ingredients: null,
-  ingredientsPrice: null,
+  ingredients: Map({}),
+  ingredientsPrice: Map({}),
   totalPrice: 4,
   error: false,
   isBuilding: false
 });
 
-const addIngredient = (state, action) => {
-  console.error('REWORK : addIngredient - reducer');
-  // const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] + 1 }
-  // const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
-  // const updatedState = {
-  //   ingredients: updatedIngredients,
-  //   totalPrice: state.totalPrice + state.ingredientsPrice[action.ingredientKey],
-  //   building: true
-  // }
-  // return updateObject(state, updatedState);
+// CHECKED - REWORKED
+const addIngredient = (state, { ingredientKey }) => {
+  return state.mergeDeep({
+    ingredients: {
+      [ingredientKey]: state.get('ingredients').get(ingredientKey) + 1
+    },
+    totalPrice: state.get('totalPrice') + state.get('ingredientsPrice').get(ingredientKey),
+    isBuilding: true
+  })
 }
 
-const removeIngredient = (state, action) => {
-  console.error('REWORK - removeIngredient - reducer');
-  // const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] - 1 }
-  // const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
-  // const updatedStateProps = {
-  //   ingredients: updatedIngredients,
-  //   totalPrice: state.totalPrice - state.ingredientsPrice[action.ingredientKey]
-  // }
-  // return updateObject(state, updatedStateProps);
+// CHECKED - REWORKED
+const removeIngredient = (state, { ingredientKey }) => {
+  return state.mergeDeep({
+    ingredients: {
+      [ingredientKey]: state.get('ingredients').get(ingredientKey) - 1
+    },
+    totalPrice: state.get('totalPrice') - state.get('ingredientsPrice').get(ingredientKey)
+  })
 }
 
-const setIngredients = (state, action) => {
-  console.error('REWORK - setIngredients - reducer');
-  // return updateObject(state, {
-  //   ingredients: action.ingredients,
-  //   ingredientsPrice: action.ingredientsPrice,
-  //   totalPrice: 4,
-  //   error: false,
-  //   building: false
-  // });
+// CHECKED - REWORKED
+const setIngredients = (state, {ingredients, ingredientsPrice}) => {
+  return state.mergeDeep({
+    ingredients: ingredients,
+    ingredientsPrice: ingredientsPrice,
+    totalPrice: 4,
+    error: false,
+    building: false
+  });
 } 
 
+// CHECKED - REWORKED
 const fetchIngredientsFailed = (state) => {
-  console.error('REWORK - fetchIngredientsFailed - reducer');
-  // return updateObject(state, { error: true });
+  return state.set('error', true);
 }
 
 

@@ -26,23 +26,24 @@ class App extends Component {
       routes = (
         <Switch>
           <Route path="/auth" component={AsyncAuth} />
-          {/*TODO: ORIGINAL <Route path="/" exact component={BurgerBuilder} /> */}
-          {/*TODO: ORIGINAL <Redirect to="/" /> */}
+          {/*FIXME: IN PROGRESS */}
+          {<Route path="/" exact component={BurgerBuilder} />}
+          {<Redirect to="/" />}
         </Switch>
       );
       
       if(this.props.isAuth) {
-        // TODO: ORIGINAL
-        // routes =(
-        //   <Switch>
-        //      <Route path="/checkout" component={AsyncCheckout} />
-        //      <Route path="/orders" component={AsyncOrders} />
-        //      <Route path="/logout" component={Logout} />
-        //      <Route path="/auth" component={AsyncAuth} />
-        //      <Route path="/" exact component={BurgerBuilder} />
-        //      <Redirect to="/" />
-        //   </Switch>
-        // );
+        routes =(
+          <Switch>
+             {/* <Route path="/checkout" component={AsyncCheckout} />
+             <Route path="/orders" component={AsyncOrders} />
+             <Route path="/logout" component={Logout} />
+             <Route path="/auth" component={AsyncAuth} /> */}
+             {/*FIXME: IN PROGRESS */}
+             <Route path="/" exact component={BurgerBuilder} />
+             <Redirect to="/" />
+          </Switch>
+        );
       }
     }
 

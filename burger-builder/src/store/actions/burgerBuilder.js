@@ -2,6 +2,8 @@ import * as AT from '../actions/actionTypes';
 import * as API_ING from '../../constants/burger/ingredients/api.ingredients';
 import axios from '../../axios-orders';
 
+import { Map, fromJS } from 'immutable';
+
 export const addIngredient = (ingredientKey) => {
   return {
     type: AT.ADD_INGREDIENT,
@@ -16,60 +18,60 @@ export const removeIngredient = (ingredientKey) => {
   };
 };
 
+// CHECKED
 export const setIngredients = (ingredients, ingredientsPrice) => {
-  console.error('REWORK - setIngredients - action');
-  // return {
-  //   type: AT.SET_INGREDIENTS,
-  //   ingredients: ingredients,
-  //   ingredientsPrice: ingredientsPrice
-  // }
+  return {
+    type: AT.SET_INGREDIENTS,
+    ingredients: ingredients,
+    ingredientsPrice: ingredientsPrice
+  }
 }
 
+// CHECKED
 export const fetchIngredientsFailed = () => {
   return {
     type: AT.FETCH_INGREDIENTS_FAILED
   }
 }
 
+// CHECKED
 const mapResIngredients = (resIngredients) => {
-  console.error('REWORK - mapResIngredients - helper func - action');
-  // const ingredients = {};
-  // const ingredientsPrice = {};
-  // const unknownIngredients = [];
+  const ingredients = {};
+  const ingredientsPrice = {};
+  const unknownIngredients = [];
 
-  // resIngredients.forEach(resIngredientObj => {
-  //   let isUnknownIngredient = true;
-  //   Object.keys({...API_ING}).forEach(apiIngKey => {
-  //     if(resIngredientObj.type === API_ING[apiIngKey]) {
-  //       ingredients[apiIngKey] = resIngredientObj.amount;
-  //       ingredientsPrice[apiIngKey] = resIngredientObj.price;
-  //       isUnknownIngredient = false;
-  //     }
-  //   });
+  resIngredients.forEach(resIngredientObj => {
+    let isUnknownIngredient = true;
+    Object.keys({...API_ING}).forEach(apiIngKey => {
+      if(resIngredientObj.type === API_ING[apiIngKey]) {
+        ingredients[apiIngKey] = resIngredientObj.amount;
+        ingredientsPrice[apiIngKey] = resIngredientObj.price;
+        isUnknownIngredient = false;
+      }
+    });
 
-  //   if(isUnknownIngredient) {
-  //     unknownIngredients.push(resIngredientObj.type);
-  //   }
-  // });
+    if(isUnknownIngredient) {
+      unknownIngredients.push(resIngredientObj.type);
+    }
+  });
 
-  // axios.post('/logs/unknownIngredients.json', unknownIngredients)
-  //     .then()
-  //     .catch(error => console.error(error));
+  axios.post('/logs/unknownIngredients.json', unknownIngredients)
+      .then()
+      .catch(error => console.error(error));
 
-  // return { ingredients, ingredientsPrice };
+  return { ingredients, ingredientsPrice };
 }
 
-
+//In PROGRESS
 export const initIngredients = () => {
-  console.error('REWORK - initIngredients - action');
-  // return dispatch => {
-  //   axios.get('/ingredients.json')
-  //     .then(res => {
-  //       const ingsData = mapResIngredients(res.data);
-  //       dispatch(setIngredients(ingsData.ingredients, ingsData.ingredientsPrice));
-  //     })
-  //     .catch(error => {
-  //       dispatch(fetchIngredientsFailed());
-  //     });
-  // };
+  return dispatch => {
+    axios.get('/ingredients.json')
+      .then(res => {
+        const ingredientsData = fromJS(mapResIngredients(res.data));
+        dispatch(setIngredients(ingredientsData.get('ingredients'), ingredientsData.get('ingredientsPrice')));
+      })
+      .catch(error => {
+        dispatch(fetchIngredientsFailed());
+      });
+  };
 }

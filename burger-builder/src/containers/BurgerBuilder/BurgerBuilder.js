@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from '../../axios-orders';
 import { connect } from 'react-redux';
 
+import { Map } from 'immutable';
+
 import * as actions from '../../store/actions/index';
 
 import Burger from '../../components/Burger/Burger';
@@ -13,23 +15,19 @@ import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 class BurgerBuilder extends Component {
   state = {
-    isPurchaseInProgress: false
-  };
+    data: Map({
+      isPurchaseInProgress: false
+    })
+  }
 
   componentDidMount() {
     this.props.onInitIngredients();
   }
 
   checkIsPurchasable = (ingredients) => {
-    const sum = Object.keys({...ingredients})
-      .map(ingKey => {
-        return ingredients[ingKey];
-      })
-      .reduce((sum, ingAmount) => { 
-        return sum + ingAmount
-      }, 0)
-
-      return sum > 0;
+    const totalAmount = ingredients
+      .reduce((totalAmount, ingAmount, ingKey) => totalAmount + ingAmount);
+    return totalAmount > 0;
   }
 
   purchaseHandler = () => {
@@ -37,14 +35,15 @@ class BurgerBuilder extends Component {
       this.props.setAfterAuthRedirectPath('/checkout');
       return this.props.history.push('/auth');
     }
-    this.setState({
-      isPurchaseInProgress: true
-    });
+
+    this.setState(prevState => {
+      return prevState.data.set('isPurchaseInProgress', true);
+    })
   }
 
   purchaseCancelHandler = () => {
-    this.setState({
-      isPurchaseInProgress: false
+    this.setState(prevState => {
+      return prevState.data.set('isPurchaseInProgress', false);
     })
   }
 
@@ -55,10 +54,7 @@ class BurgerBuilder extends Component {
   }
 
   render() {
-    const disableRemoveIngsData = {};
-    Object.keys({...this.props.ingredients}).forEach(ingKey => {
-      disableRemoveIngsData[ingKey] = this.props.ingredients[ingKey] <= 0;
-    });
+    const isRemoveIngredientDisabledConfig = this.props.ingredients.map(ingAmount => ingAmount <= 0);
 
     let orderSummary = null;
 
@@ -70,12 +66,12 @@ class BurgerBuilder extends Component {
           <Burger ingredients={this.props.ingredients} />
           <BuildControls
             ingredients={this.props.ingredients}
-            onIngredientAdded={this.props.onIngredientAdded}
-            onIngredientRemoved={this.props.onIngredientRemoved}
-            disableRemoveIngsData ={disableRemoveIngsData}
+            onIngredientAdd={this.props.onIngredientAdd}
+            onIngredientRemove={this.props.onIngredientRemove}
+            isRemoveIngredientDisabledConfig={isRemoveIngredientDisabledConfig}
             price={this.props.totalPrice}
             isPurchasable={this.checkIsPurchasable(this.props.ingredients)}
-            onOrdered={this.purchaseHandler}
+            onOrder={this.purchaseHandler}
             isAuth={this.props.isAuth} />
         </React.Fragment>
       );
@@ -83,13 +79,13 @@ class BurgerBuilder extends Component {
       orderSummary = <OrderSummary
         ingredients={this.props.ingredients}
         price={this.props.totalPrice}
-        onPurchaseCancelled={this.purchaseCancelHandler}
+        onPurchaseCancel={this.purchaseCancelHandler}
         onPurchaseContinue={this.purchaseContinueHandler} />
     }
 
     return (
       <React.Fragment>
-        <Modal show={this.state.isPurchaseInProgress} onModalClosed={this.purchaseCancelHandler}>
+        <Modal show={this.state.data.get('isPurchaseInProgress')} onModalClose={this.purchaseCancelHandler}>
           {orderSummary}
         </Modal>
         {burger}
@@ -100,17 +96,17 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    ingredients: state.burgerBuilder.ingredients,
-    totalPrice: state.burgerBuilder.totalPrice,
-    error: state.burgerBuilder.error,
-    isAuth: state.auth.token !== null
+    ingredients: state.burgerBuilder.get('ingredients'),
+    totalPrice: state.burgerBuilder.get('totalPrice'),
+    error: state.burgerBuilder.get('error'),
+    isAuth: state.auth.get('token') !== null
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onIngredientAdded: (ingredientKey) => dispatch(actions.addIngredient(ingredientKey)),
-    onIngredientRemoved: (ingredientKey) => dispatch(actions.removeIngredient(ingredientKey)),
+    onIngredientAdd: (ingredientKey) => dispatch(actions.addIngredient(ingredientKey)),
+    onIngredientRemove: (ingredientKey) => dispatch(actions.removeIngredient(ingredientKey)),
     onInitIngredients: () => dispatch(actions.initIngredients()),
     onInitPurchase: () => dispatch(actions.purchaseInit()),
     setAfterAuthRedirectPath: (path) => dispatch(actions.setAfterAuthRedirectPath(path))

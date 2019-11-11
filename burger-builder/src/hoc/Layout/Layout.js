@@ -1,25 +1,31 @@
 import React , { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { Map } from 'immutable'
+
 import classes from './Layout.css';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer'
 
 class Layout extends Component {
+  
+  //reworked
   state = {
-    showSideDrawer: false,
+    data: Map({
+      showSideDrawer: false
+    })
   }
-
+  //reworked
   sideDrawerClosedHandler = () => {
     this.setState({
-      showSideDrawer: false,
+      data: this.state.data.set('showSideDrawer', false)
     });
   }
-
+  //reworked
   sideDrawerToggleHandler = () => {
     this.setState((prevState) => {
       return {
-        showSideDrawer: !prevState.showSideDrawer,
+        data: prevState.data.set('showSideDrawer', !prevState.data.get('showSideDrawer'))
       }
     })
   }
@@ -32,7 +38,7 @@ class Layout extends Component {
           drawerToggleClicked={this.sideDrawerToggleHandler} />
         <SideDrawer
           isAuth={this.props.isAuthenticated}
-          open={this.state.showSideDrawer} closed={this.sideDrawerClosedHandler} />
+          open={this.state.data.get('showSideDrawer')} closed={this.sideDrawerClosedHandler} />
         <main className={classes.Content}>
           {this.props.children}
         </main>

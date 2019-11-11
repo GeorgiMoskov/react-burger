@@ -13,12 +13,12 @@ const initialState = Map({
   afterAuthRedirectPath: '/',
 });
 
+// CHECKED
 const authStart = (state) => {
-  console.error('REWORK - authStart - reducer');
-  // return updateObject(state, { error: null, loading: true });
+  return state.mergeDeep({ error: null, loading: true })
 };
 
-//CHECKED - REWORKED
+//CHECKED
 const authSuccess = (state, {token, userId}) => {
   return state.mergeDeep({
     authDidInit: true,
@@ -29,15 +29,15 @@ const authSuccess = (state, {token, userId}) => {
   })
 };
 
-const authFail = (state, action) => {
-  console.error('REWORK - authFail - reducer');
-  // return updateObject(state, {
-  //   loading: false,
-  //   error: action.error
-  // })
+//CHECKED
+const authFail = (state, {error}) => {
+  return state.mergeDeep({
+    loading: false,
+    error: error
+  })
 }
 
-//CHECKED - REWORKED
+//CHECKED
 const authLogout = (state) => {
   return state.mergeDeep({
     authDidInit: true,
@@ -46,7 +46,7 @@ const authLogout = (state) => {
   });
 };
 
-//CHECKED - REWORKED
+//CHECKED
 const setAfterAuthRedirectPath = (state, {path}) => {
   return state.mergeDeep({
     afterAuthRedirectPath: path

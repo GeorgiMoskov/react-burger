@@ -2,6 +2,7 @@ import axios from 'axios';
 
 import * as AT from './actionTypes';
 
+//CHECKED
 export const authStart = () => {
   return {
     type: AT.AUTH_START
@@ -17,6 +18,7 @@ export const authSuccess = (token, userId) => {
   };
 };
 
+//CHECKED
 export const authFail = (error) => {
   return {
     type: AT.AUTH_FAIL,
@@ -43,6 +45,7 @@ export const startAuthTimeout = (expirationTimeInMs) => {
   };
 };
 
+// CHECKED
 export const auth = (email, password, isRegister) => {
   return dispatch => {
     dispatch(authStart());
@@ -77,6 +80,7 @@ export const auth = (email, password, isRegister) => {
   }
 }
 
+// CHECKED
 export const setAfterAuthRedirectPath = (path) => {
   return {
     type: AT.SET_AFTER_AUTH_REDIRECT_PATH,
