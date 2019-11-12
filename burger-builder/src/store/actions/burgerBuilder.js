@@ -20,6 +20,9 @@ export const removeIngredient = (ingredientKey) => {
 
 // CHECKED
 export const setIngredients = (ingredients, ingredientsPrice) => {
+  /* TODO: create startingPrice based on amount of default ingredients and base price.
+  To check - add amount to some of the ingredients on backend */
+
   return {
     type: AT.SET_INGREDIENTS,
     ingredients: ingredients,
