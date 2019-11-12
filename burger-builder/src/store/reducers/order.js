@@ -1,35 +1,32 @@
 import * as AT from '../actions/actionTypes';
-import { updateObject } from '../../shared/utility';
+import { Map, List, fromJS } from 'immutable';
 
-const initialState = {
-  orders: [],
+const initialState = Map({
+  orders: List(),
   loading: false,
-  purchased: false
-}
+  isPurchased: false
+});
 
 const purchaseInit = (state) => {
-  console.error('REWORK - purchaseInit - reducer');
-  // return updateObject(state, { purchased: false });
+  return state.set("isPurchased", false);
 };
 
 const purchaseBurgerStart = (state) => {
-  console.error('REWORK - purchaseBurgerStart - reducer');
-  // return updateObject(state, { loading: true });
+  return state.set('loading', true);
 };
 
-const purchaseBurgerSuccess = (state, action) => {
-  console.error('REWORK - purchaseBurgerSuccess - reducer');
-  // const newOrder = updateObject(action.orderData, { id: action.orderId })
-  // return updateObject(state, {
-  //   loading: false,
-  //   purchased: true,
-  //   orders: state.orders.concat(newOrder)
-  // });
+const purchaseBurgerSuccess = (state, {orderData, orderId}) => {
+  const order = fromJS(orderData).set('id', orderId);
+  return state.mergeDeep({
+    orders: state.get('orders').push(order),
+    loading: false,
+    isPurchased: false
+  })
 };
 
-const purchaseBurgerFail = (state) => {
-  console.error('REWORK - purchaseBurgerFail - reducer');
-  // return updateObject(state, { loading: false });
+const purchaseBurgerFail = (state, {error}) => {
+  console.error('Error Purchase Burger =>', error);
+  return state.set('loading', false);
 };
 
 const fetchOrdersStart = (state) => {

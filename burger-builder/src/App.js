@@ -26,7 +26,6 @@ class App extends Component {
       routes = (
         <Switch>
           <Route path="/auth" component={AsyncAuth} />
-          {/*FIXME: IN PROGRESS */}
           {<Route path="/" exact component={BurgerBuilder} />}
           {<Redirect to="/" />}
         </Switch>
@@ -35,11 +34,11 @@ class App extends Component {
       if(this.props.isAuth) {
         routes =(
           <Switch>
-             {/* <Route path="/checkout" component={AsyncCheckout} />
-             <Route path="/orders" component={AsyncOrders} />
+             {/* FIXME: IN PROGRESS
+             <Route path="/orders" component={AsyncOrders} />*/}
+             <Route path="/auth" component={AsyncAuth} />
              <Route path="/logout" component={Logout} />
-             <Route path="/auth" component={AsyncAuth} /> */}
-             {/*FIXME: IN PROGRESS */}
+             <Route path="/checkout" component={AsyncCheckout} />
              <Route path="/" exact component={BurgerBuilder} />
              <Redirect to="/" />
           </Switch>

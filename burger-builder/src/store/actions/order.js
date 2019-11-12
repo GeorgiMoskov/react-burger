@@ -2,12 +2,11 @@ import * as AT from './actionTypes';
 import axios from '../../axios-orders';
 
 export const purchaseBurgerSuccess = (orderId, orderData) => {
-  console.error('REWORK - purchaseBurgerSuccess - action ');
-  // return {
-  //   type: AT.PURCHASE_BURGER_SUCCESS,
-  //   orderId: orderId,
-  //   orderData: orderData
-  // };
+  return {
+    type: AT.PURCHASE_BURGER_SUCCESS,
+    orderId: orderId,
+    orderData: orderData
+  };
 };
 
 export const purchaseBurgerFail = (error) => {
@@ -30,18 +29,17 @@ export const purchaseInit = () => {
 }
 
 export const purchaseBurger = (orderData, token) => {
-  console.error('REWORK - purchaseBurger - action ');
-  // return dispatch => {
-  //   dispatch(purchaseBurgerStart());
+  return dispatch => {
+    dispatch(purchaseBurgerStart());
 
-  //   axios.post('/orders.json?auth=' + token, orderData)
-  //     .then(response => {
-  //       dispatch(purchaseBurgerSuccess(response.data.name, orderData));
-  //     })
-  //     .catch(error => {
-  //       dispatch(purchaseBurgerFail(error));
-  //     });
-  // };
+    axios.post('/orders.json?auth=' + token, orderData)
+      .then(response => {
+        dispatch(purchaseBurgerSuccess(response.data.name, orderData));
+      })
+      .catch(error => {
+        dispatch(purchaseBurgerFail(error));
+      });
+  };
 };
 
 export const fetchOrdersSuccess = (orders) => {
