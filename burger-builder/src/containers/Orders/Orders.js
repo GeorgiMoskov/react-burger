@@ -13,21 +13,23 @@ class Orders extends Component {
     this.props.fetchOrders(this.props.token, this.props.userId);
   }
 
-  render() {
-    let orders = <Spinner />;
-    if(!this.props.loading) {
-      orders = this.props.orders.map(order => 
-        (
-          <Order 
-            key={order.id}
-            ingredients={order.ingredients}
-            price={order.price}/>
-        ));
+  renderOrders = () => {
+    if(this.props.loading) {
+      return <Spinner />;
     }
 
+    return this.props.orders.map(orderMap => (
+      <Order 
+        key={orderMap.get('id')}
+        ingredients={orderMap.get('ingredients')}
+        price={orderMap.get('price')}/>
+    ));
+  }
+
+  render() {
     return (
       <div>
-        {orders}
+        {this.renderOrders()}
       </div>
     )
   }
@@ -35,10 +37,10 @@ class Orders extends Component {
 
 const mapStateToProps = state => {
   return {
-    orders: state.order.orders,
-    loading: state.order.loading,
-    token: state.auth.token,
-    userId: state.auth.userId
+    orders: state.order.get('orders'),
+    loading: state.order.get('loading'),
+    token: state.auth.get('token'),
+    userId: state.auth.get('userId')
   }
 }
 

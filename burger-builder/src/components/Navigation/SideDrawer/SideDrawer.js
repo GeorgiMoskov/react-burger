@@ -7,13 +7,13 @@ import Backdrop from '../../UI/Backdrop/Backdrop';
 
 const sideDrawer = (props) => {
   let attachedClasses = [classes.SideDrawer, classes.Close];
-  if(props.open) {
+  if(props.isOpen) {
     attachedClasses = [classes.SideDrawer, classes.Open];
   }
 
   return (
     <React.Fragment>
-      <Backdrop show={props.open} click={props.closed} />
+      <Backdrop shouldShow={props.isOpen} onClick={props.onClose} />
     <div className={attachedClasses.join(' ')}>
       <div className={classes.Logo}>
         <Logo />

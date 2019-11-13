@@ -1,23 +1,21 @@
-export const updateObject = (oldObject, updatedProperties) => {
-  return {
-    ...oldObject,
-    ...updatedProperties
-  };
-}
-
 export const checkValidity = (value, rules) => {
   let isValid = true;
 
-  if (rules.required) {
+  if (rules.get('required')) {
     isValid = value.trim() !== '' && isValid;
   }
 
-  if(rules.minLength) {
-    isValid = value.length >= rules.minLength && isValid;
+  if(rules.get('minLength')) {
+    isValid = value.length >= rules.get('minLength') && isValid;
   }
 
-  if(rules.maxLength) {
-    isValid = value.length <= rules.minLength && isValid;
+  if(rules.get('maxLength')) {
+    isValid = value.length <= rules.get('minLength') && isValid;
+  }
+
+  if(rules.get('isEmail')) {
+    const isEmailRX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    isValid = isEmailRX.test(value) && isValid;
   }
 
   return isValid;

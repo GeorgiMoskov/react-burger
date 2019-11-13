@@ -2,6 +2,8 @@ import * as AT from '../actions/actionTypes';
 import * as API_ING from '../../constants/burger/ingredients/api.ingredients';
 import axios from '../../axios-orders';
 
+import { Map, fromJS } from 'immutable';
+
 export const addIngredient = (ingredientKey) => {
   return {
     type: AT.ADD_INGREDIENT,
@@ -17,6 +19,9 @@ export const removeIngredient = (ingredientKey) => {
 };
 
 export const setIngredients = (ingredients, ingredientsPrice) => {
+  /* FIXME: create startingPrice based on amount of default ingredients and base price.
+  To check - add amount to some of the ingredients on backend */
+
   return {
     type: AT.SET_INGREDIENTS,
     ingredients: ingredients,
@@ -61,8 +66,8 @@ export const initIngredients = () => {
   return dispatch => {
     axios.get('/ingredients.json')
       .then(res => {
-        const ingsData = mapResIngredients(res.data);
-        dispatch(setIngredients(ingsData.ingredients, ingsData.ingredientsPrice));
+        const ingredientsData = fromJS(mapResIngredients(res.data));
+        dispatch(setIngredients(ingredientsData.get('ingredients'), ingredientsData.get('ingredientsPrice')));
       })
       .catch(error => {
         dispatch(fetchIngredientsFailed());

@@ -2,34 +2,44 @@ import React from 'react';
 import classes from './BuildControls.css';
 import BuildControl from './BuildControl/BuildControl';
 
+import { Map } from 'immutable'
+
 import * as UI_ING from '../../../constants/burger/ingredients/ui.ingredients';
 
 const buildControls = props => {
-  const controls = Object.keys(props.ingredients).map(ingKey => {
-    return {
-      label: UI_ING[ingKey],
-      ingType: ingKey
-    }
-  })
+  const { 
+    ingredients, price, isRemoveIngredientDisabledConfig,
+    isPurchasable, isAuth, onOrder, 
+    onIngredientAdd, onIngredientRemove
+   } = props;
+
+  const ingredientControls = ingredients
+    .map((_, ingKey) => {
+      return Map({
+        label: UI_ING[ingKey],
+        ingType: ingKey
+      });
+    })
+    .toList();
 
   return (
     <div className={classes.BuildControls}>
       <p>
-        Current Price: <strong>{props.price.toFixed(2)}</strong>
+        Current Price: <strong>{price.toFixed(2)}</strong>
       </p>
-      {controls.map(ctrl => (
+      {ingredientControls.map(ctrl => (
         <BuildControl
-          key={ctrl.label}
-          label={ctrl.label[0].toUpperCase() + ctrl.label.slice(1)}
-          added={() => props.onIngredientAdded(ctrl.ingType)}
-          removed={() => props.onIngredientRemoved(ctrl.ingType)}
-          disabled={props.disableRemoveIngsData[ctrl.ingType]}
+          key={ctrl.get('label')}
+          label={ctrl.get('label')[0].toUpperCase() + ctrl.get('label').slice(1)}
+          onAdd={() => onIngredientAdd(ctrl.get('ingType'))}
+          onRemove={() => onIngredientRemove(ctrl.get('ingType'))}
+          isRemoveDisabled={isRemoveIngredientDisabledConfig.get(ctrl.get('ingType'))}
         />
       ))}
       <button 
         className={classes.OrderButton}
-        disabled={!props.isPurchasable}
-        onClick={props.onOrdered}>{props.isAuth ? 'ORDER NOW' : 'LOGIN TO ORDER'}</button>
+        disabled={!isPurchasable}
+        onClick={onOrder}>{isAuth ? 'ORDER NOW' : 'LOGIN TO ORDER'}</button>
     </div>
   );
 };

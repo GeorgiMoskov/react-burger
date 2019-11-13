@@ -69,14 +69,15 @@ export const auth = (email, password, isRegister) => {
         dispatch(authSuccess(response.data.idToken, response.data.localId));
       })
       .catch(error => {
-        dispatch(authFail(error.response.data.error));
+        const errorData = error.response ? error.response.data.error : error;
+        dispatch(authFail(errorData));
       })
   }
 }
 
-export const setAuthRedirectPath = (path) => {
+export const setAfterAuthRedirectPath = (path) => {
   return {
-    type: AT.SET_AUTH_REDIRECT_PATH,
+    type: AT.SET_AFTER_AUTH_REDIRECT_PATH,
     path: path
   }
 };
@@ -86,6 +87,7 @@ export const initAuthState = () => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     const expirationDateStr = localStorage.getItem('expirationDate');
+
     if(!token || !userId || !expirationDateStr) {
       return dispatch(logout());
     }

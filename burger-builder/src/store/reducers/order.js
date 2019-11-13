@@ -1,46 +1,44 @@
 import * as AT from '../actions/actionTypes';
-import { updateObject } from '../../shared/utility';
+import { Map, List } from 'immutable';
 
-const initialState = {
-  orders: [],
+const initialState = Map({
+  orders: List(),
   loading: false,
-  purchased: false
-}
+  isPurchased: false
+});
 
 const purchaseInit = (state) => {
-  return updateObject(state, { purchased: false });
+  return state.set("isPurchased", false);
 };
 
 const purchaseBurgerStart = (state) => {
-  return updateObject(state, { loading: true });
+  return state.set('loading', true);
 };
 
-const purchaseBurgerSuccess = (state, action) => {
-  const newOrder = updateObject(action.orderData, { id: action.orderId })
-  return updateObject(state, {
+const purchaseBurgerSuccess = (state) => {
+  return state.mergeDeep({
     loading: false,
-    purchased: true,
-    orders: state.orders.concat(newOrder)
-  });
+    isPurchased: true
+  })
 };
 
-const purchaseBurgerFail = (state) => {
-  return updateObject(state, { loading: false });
+const purchaseBurgerFail = (state, {error}) => {
+  console.error('Error Purchase Burger =>', error);
+  return state.set('loading', false);
 };
 
 const fetchOrdersStart = (state) => {
-  return updateObject(state, { loading: true });
+  return state.set('loading', true);
 };
 
-const fetchOrdersSuccess = (state, action) => {
-  return updateObject(state, {
-    orders: action.orders,
-    loading: false
-  });
+const fetchOrdersSuccess = (state, {orders}) => {
+  return state
+    .set('orders', orders)
+    .set('loading', false)
 };
 
 const fetchOrdersFail = (state) => {
-  return updateObject(state, { loading: false });
+  return state.set('loading', false);
 };
 
 const reducer = (state = initialState, action) => {

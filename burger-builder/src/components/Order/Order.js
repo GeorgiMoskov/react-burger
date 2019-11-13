@@ -1,37 +1,31 @@
 import React from 'react';
 import classes from './Order.css';
 
+import * as ING_UI from '../../constants/burger/ingredients/ui.ingredients';
+
 const Order = (props) => {
-  let ingredientsArr = [];
-  for(let ingredientKey in props.ingredients) {
-    ingredientsArr.push({
-      name: ingredientKey,
-      amount: props.ingredients[ingredientKey]
-    });
-  };
-
-  const ingredients = ingredientsArr.map((ingredientObj, index) => (
-    <span 
-      style={{
-        textTransform: 'capitalize',
-        display: 'inline-block',
-        margin: '5px',
-        border: '1px solid gray',
-        padding: '5px'
-      }}
-      key={index}> {ingredientObj.name} : {ingredientObj.amount}
+  const renderIngredients = () => {
+    return props.ingredients.map((ingAmount, ingKey, index) => (
+      <span 
+        style={{
+          textTransform: 'capitalize',
+          display: 'inline-block',
+          margin: '5px',
+          border: '1px solid gray',
+          padding: '5px'
+        }}
+        key={index}>
+          {ING_UI[ingKey]} : {ingAmount}
       </span>
-    ));
+    ))
+    .toList();
+  }
 
-    let formattedPrice = null;
-    if(props.price) {
-      formattedPrice = Number.parseFloat(props.price).toFixed(2);
-    }
-
+  const formattedPrice = Number.parseFloat(props.price).toFixed(2);
 
   return (
     <div className={classes.Order}>
-      <p>Ingredients: {ingredients}</p>
+      <p>Ingredients: {renderIngredients()}</p>
       <p>Price: <strong>USD {formattedPrice}</strong></p>
     </div>
   )

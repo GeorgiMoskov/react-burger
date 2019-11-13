@@ -1,39 +1,37 @@
 import * as AT from '../actions/actionTypes';
-import { updateObject } from '../../shared/utility';
+import { Map } from 'immutable';
 
-const initialState = {
-  ingredients: null,
-  ingredientsPrice: null,
+const initialState = Map({
+  ingredients: Map({}),
+  ingredientsPrice: Map({}),
   totalPrice: 4,
   error: false,
-  building: false
-};
+  isBuilding: false
+});
 
-const addIngredient = (state, action) => {
-  const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] + 1 }
-  const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
-  const updatedState = {
-    ingredients: updatedIngredients,
-    totalPrice: state.totalPrice + state.ingredientsPrice[action.ingredientKey],
-    building: true
-  }
-  return updateObject(state, updatedState);
+const addIngredient = (state, { ingredientKey }) => {
+  return state.mergeDeep({
+    ingredients: {
+      [ingredientKey]: state.get('ingredients').get(ingredientKey) + 1
+    },
+    totalPrice: state.get('totalPrice') + state.get('ingredientsPrice').get(ingredientKey),
+    isBuilding: true
+  })
 }
 
-const removeIngredient = (state, action) => {
-  const updatedIngredient = { [action.ingredientKey]: state.ingredients[action.ingredientKey] - 1 }
-  const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
-  const updatedStateProps = {
-    ingredients: updatedIngredients,
-    totalPrice: state.totalPrice - state.ingredientsPrice[action.ingredientKey]
-  }
-  return updateObject(state, updatedStateProps);
+const removeIngredient = (state, { ingredientKey }) => {
+  return state.mergeDeep({
+    ingredients: {
+      [ingredientKey]: state.get('ingredients').get(ingredientKey) - 1
+    },
+    totalPrice: state.get('totalPrice') - state.get('ingredientsPrice').get(ingredientKey)
+  })
 }
 
-const setIngredients = (state, action) => {
-  return updateObject(state, {
-    ingredients: action.ingredients,
-    ingredientsPrice: action.ingredientsPrice,
+const setIngredients = (state, {ingredients, ingredientsPrice}) => {
+  return state.mergeDeep({
+    ingredients: ingredients,
+    ingredientsPrice: ingredientsPrice,
     totalPrice: 4,
     error: false,
     building: false
@@ -41,7 +39,7 @@ const setIngredients = (state, action) => {
 } 
 
 const fetchIngredientsFailed = (state) => {
-  return updateObject(state, { error: true });
+  return state.set('error', true);
 }
 
 
