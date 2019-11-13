@@ -34,8 +34,7 @@ class App extends Component {
       if(this.props.isAuth) {
         routes =(
           <Switch>
-             {/* FIXME: IN PROGRESS
-             <Route path="/orders" component={AsyncOrders} />*/}
+             <Route path="/orders" component={AsyncOrders} />
              <Route path="/auth" component={AsyncAuth} />
              <Route path="/logout" component={Logout} />
              <Route path="/checkout" component={AsyncCheckout} />

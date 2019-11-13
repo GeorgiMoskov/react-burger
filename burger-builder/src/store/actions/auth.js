@@ -2,14 +2,12 @@ import axios from 'axios';
 
 import * as AT from './actionTypes';
 
-//CHECKED
 export const authStart = () => {
   return {
     type: AT.AUTH_START
   };
 };
 
-//CHECKED
 export const authSuccess = (token, userId) => {
   return {
     type: AT.AUTH_SUCCESS,
@@ -18,7 +16,6 @@ export const authSuccess = (token, userId) => {
   };
 };
 
-//CHECKED
 export const authFail = (error) => {
   return {
     type: AT.AUTH_FAIL,
@@ -26,7 +23,6 @@ export const authFail = (error) => {
   };
 };
 
-//CHECKED
 export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('expirationDate');
@@ -36,7 +32,6 @@ export const logout = () => {
   }
 }
 
-//CHECKED
 export const startAuthTimeout = (expirationTimeInMs) => {
   return dispatch => {
     setTimeout(() => {
@@ -45,7 +40,6 @@ export const startAuthTimeout = (expirationTimeInMs) => {
   };
 };
 
-// CHECKED
 export const auth = (email, password, isRegister) => {
   return dispatch => {
     dispatch(authStart());
@@ -75,12 +69,12 @@ export const auth = (email, password, isRegister) => {
         dispatch(authSuccess(response.data.idToken, response.data.localId));
       })
       .catch(error => {
-        dispatch(authFail(error.response.data.error));
+        const errorData = error.response ? error.response.data.error : error;
+        dispatch(authFail(errorData));
       })
   }
 }
 
-// CHECKED
 export const setAfterAuthRedirectPath = (path) => {
   return {
     type: AT.SET_AFTER_AUTH_REDIRECT_PATH,
@@ -88,7 +82,6 @@ export const setAfterAuthRedirectPath = (path) => {
   }
 };
 
-// CHECKED
 export const initAuthState = () => {
   return dispatch => {
     const token = localStorage.getItem('token');

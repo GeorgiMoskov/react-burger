@@ -18,9 +18,8 @@ export const removeIngredient = (ingredientKey) => {
   };
 };
 
-// CHECKED
 export const setIngredients = (ingredients, ingredientsPrice) => {
-  /* TODO: create startingPrice based on amount of default ingredients and base price.
+  /* FIXME: create startingPrice based on amount of default ingredients and base price.
   To check - add amount to some of the ingredients on backend */
 
   return {
@@ -30,14 +29,12 @@ export const setIngredients = (ingredients, ingredientsPrice) => {
   }
 }
 
-// CHECKED
 export const fetchIngredientsFailed = () => {
   return {
     type: AT.FETCH_INGREDIENTS_FAILED
   }
 }
 
-// CHECKED
 const mapResIngredients = (resIngredients) => {
   const ingredients = {};
   const ingredientsPrice = {};
@@ -65,7 +62,6 @@ const mapResIngredients = (resIngredients) => {
   return { ingredients, ingredientsPrice };
 }
 
-//In PROGRESS
 export const initIngredients = () => {
   return dispatch => {
     axios.get('/ingredients.json')

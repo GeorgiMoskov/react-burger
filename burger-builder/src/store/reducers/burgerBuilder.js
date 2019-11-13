@@ -1,6 +1,4 @@
 import * as AT from '../actions/actionTypes';
-import { updateObject } from '../../shared/utility';
-
 import { Map } from 'immutable';
 
 const initialState = Map({
@@ -11,7 +9,6 @@ const initialState = Map({
   isBuilding: false
 });
 
-// CHECKED - REWORKED
 const addIngredient = (state, { ingredientKey }) => {
   return state.mergeDeep({
     ingredients: {
@@ -22,7 +19,6 @@ const addIngredient = (state, { ingredientKey }) => {
   })
 }
 
-// CHECKED - REWORKED
 const removeIngredient = (state, { ingredientKey }) => {
   return state.mergeDeep({
     ingredients: {
@@ -32,7 +28,6 @@ const removeIngredient = (state, { ingredientKey }) => {
   })
 }
 
-// CHECKED - REWORKED
 const setIngredients = (state, {ingredients, ingredientsPrice}) => {
   return state.mergeDeep({
     ingredients: ingredients,
@@ -43,7 +38,6 @@ const setIngredients = (state, {ingredients, ingredientsPrice}) => {
   });
 } 
 
-// CHECKED - REWORKED
 const fetchIngredientsFailed = (state) => {
   return state.set('error', true);
 }

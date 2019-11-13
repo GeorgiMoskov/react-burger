@@ -1,5 +1,4 @@
 import * as AT from '../actions/actionTypes';
-import { updateObject } from '../../shared/utility';
 
 import { Map } from 'immutable';
 
@@ -13,12 +12,10 @@ const initialState = Map({
   afterAuthRedirectPath: '/',
 });
 
-// CHECKED
 const authStart = (state) => {
   return state.mergeDeep({ error: null, loading: true })
 };
 
-//CHECKED
 const authSuccess = (state, {token, userId}) => {
   return state.mergeDeep({
     authDidInit: true,
@@ -29,7 +26,6 @@ const authSuccess = (state, {token, userId}) => {
   })
 };
 
-//CHECKED
 const authFail = (state, {error}) => {
   return state.mergeDeep({
     loading: false,
@@ -37,7 +33,6 @@ const authFail = (state, {error}) => {
   })
 }
 
-//CHECKED
 const authLogout = (state) => {
   return state.mergeDeep({
     authDidInit: true,
@@ -46,7 +41,6 @@ const authLogout = (state) => {
   });
 };
 
-//CHECKED
 const setAfterAuthRedirectPath = (state, {path}) => {
   return state.mergeDeep({
     afterAuthRedirectPath: path

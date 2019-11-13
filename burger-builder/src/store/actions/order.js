@@ -1,11 +1,10 @@
 import * as AT from './actionTypes';
 import axios from '../../axios-orders';
+import { fromJS } from 'immutable';
 
-export const purchaseBurgerSuccess = (orderId, orderData) => {
+export const purchaseBurgerSuccess = () => {
   return {
     type: AT.PURCHASE_BURGER_SUCCESS,
-    orderId: orderId,
-    orderData: orderData
   };
 };
 
@@ -34,7 +33,7 @@ export const purchaseBurger = (orderData, token) => {
 
     axios.post('/orders.json?auth=' + token, orderData)
       .then(response => {
-        dispatch(purchaseBurgerSuccess(response.data.name, orderData));
+        dispatch(purchaseBurgerSuccess());
       })
       .catch(error => {
         dispatch(purchaseBurgerFail(error));
@@ -43,11 +42,10 @@ export const purchaseBurger = (orderData, token) => {
 };
 
 export const fetchOrdersSuccess = (orders) => {
-  console.error('REWORK - fetchOrdersSuccess - action ');
-  // return {
-  //   type: AT.FETCH_ORDERS_SUCCESS,
-  //   orders: orders
-  // };
+  return {
+    type: AT.FETCH_ORDERS_SUCCESS,
+    orders: fromJS(orders)
+  }
 };
 
 export const fetchOrdersFail = (error) => {
@@ -64,25 +62,23 @@ export const fetchOrdersStart = () => {
 }
 
 export const fetchOrders = (token, userId) => {
-  console.error('REWORK - fetchOrders - action ');
-  // return dispatch => {
-  //   dispatch(fetchOrdersStart());
-  
-  //   const queryParams = `?auth=${token}&orderBy="userId"&equalTo="${userId}"`;
+  return dispatch => {
+    dispatch(fetchOrdersStart());
 
-  //   axios.get('/orders.json' + queryParams)
-  //     .then(res => {
-  //       const fetchedOrders = [];
-  //       for(let key in res.data) {
-  //         fetchedOrders.push({
-  //           ...res.data[key],
-  //           id: key
-  //         });
-  //       }
-  //       dispatch(fetchOrdersSuccess(fetchedOrders));
-  //     })
-  //     .catch(err => {
-  //       dispatch(fetchOrdersFail(err));
-  //     });
-  // }
+    const queryParams = `?auth=${token}&orderBy="userId"&equalTo="${userId}"`;
+    axios.get('/orders.json' + queryParams)
+      .then(res => {
+        const fetchedOrders = [];
+        for(let key in res.data) {
+          fetchedOrders.push({
+            ...res.data[key],
+            id: key
+          });
+        }
+        dispatch(fetchOrdersSuccess(fetchedOrders));
+      })
+      .catch(err => {
+        dispatch(fetchOrdersFail(err));
+      });
+  }
 }

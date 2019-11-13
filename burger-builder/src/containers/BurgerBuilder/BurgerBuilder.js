@@ -86,7 +86,7 @@ class BurgerBuilder extends Component {
   render() {
     return (
       <React.Fragment>
-        <Modal show={this.state.isPurchaseInProgress} onModalClose={this.purchaseCancelHandler}>
+        <Modal shouldShow={this.state.isPurchaseInProgress} onModalClose={this.purchaseCancelHandler}>
           {this.renderOrderSummary()}
         </Modal>
         {this.renderBurger()}

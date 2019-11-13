@@ -1,5 +1,5 @@
 import * as AT from '../actions/actionTypes';
-import { Map, List, fromJS } from 'immutable';
+import { Map, List } from 'immutable';
 
 const initialState = Map({
   orders: List(),
@@ -15,10 +15,8 @@ const purchaseBurgerStart = (state) => {
   return state.set('loading', true);
 };
 
-const purchaseBurgerSuccess = (state, {orderData, orderId}) => {
-  const order = fromJS(orderData).set('id', orderId);
+const purchaseBurgerSuccess = (state) => {
   return state.mergeDeep({
-    orders: state.get('orders').push(order),
     loading: false,
     isPurchased: true
   })
@@ -30,21 +28,17 @@ const purchaseBurgerFail = (state, {error}) => {
 };
 
 const fetchOrdersStart = (state) => {
-  console.error('REWORK - fetchOrdersStart - reducer');
-  // return updateObject(state, { loading: true });
+  return state.set('loading', true);
 };
 
-const fetchOrdersSuccess = (state, action) => {
-  console.error('REWORK - fetchOrdersSuccess - reducer');
-  // return updateObject(state, {
-  //   orders: action.orders,
-  //   loading: false
-  // });
+const fetchOrdersSuccess = (state, {orders}) => {
+  return state
+    .set('orders', orders)
+    .set('loading', false)
 };
 
 const fetchOrdersFail = (state) => {
-  console.error('REWORK - fetchOrdersFail - reducer');
-  // return updateObject(state, { loading: false });
+  return state.set('loading', false);
 };
 
 const reducer = (state = initialState, action) => {

@@ -36,7 +36,6 @@ class ContactData extends Component {
       [DELIVERY_METHOD]: controlTypeValue[DELIVERY_METHOD],
       isFormValid: isFormValid
     })
-    console.log(controlTypeValue, isFormValid);
   }
 
   orderHandler = (event) => {

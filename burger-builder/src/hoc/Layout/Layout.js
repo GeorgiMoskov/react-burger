@@ -8,25 +8,19 @@ import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
 import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer'
 
 class Layout extends Component {
-  
-  //reworked
   state = {
-    data: Map({
-      showSideDrawer: false
-    })
+    shouldShowSideDrawer: false
   }
-  //reworked
-  sideDrawerClosedHandler = () => {
+
+  onSideDrawerCloseHandler = () => {
     this.setState({
-      data: this.state.data.set('showSideDrawer', false)
+      shouldShowSideDrawer: false
     });
   }
-  //reworked
+
   sideDrawerToggleHandler = () => {
-    this.setState((prevState) => {
-      return {
-        data: prevState.data.set('showSideDrawer', !prevState.data.get('showSideDrawer'))
-      }
+    this.setState({
+      shouldShowSideDrawer: !this.state.shouldShowSideDrawer
     })
   }
 
@@ -38,7 +32,7 @@ class Layout extends Component {
           drawerToggleClicked={this.sideDrawerToggleHandler} />
         <SideDrawer
           isAuth={this.props.isAuthenticated}
-          open={this.state.data.get('showSideDrawer')} closed={this.sideDrawerClosedHandler} />
+          isOpen={this.state.shouldShowSideDrawer} onClose={this.onSideDrawerCloseHandler} />
         <main className={classes.Content}>
           {this.props.children}
         </main>
