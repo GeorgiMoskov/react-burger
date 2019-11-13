@@ -20,7 +20,7 @@ const purchaseBurgerSuccess = (state, {orderData, orderId}) => {
   return state.mergeDeep({
     orders: state.get('orders').push(order),
     loading: false,
-    isPurchased: false
+    isPurchased: true
   })
 };
 
