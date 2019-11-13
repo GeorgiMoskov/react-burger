@@ -5,11 +5,15 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
 import Burger from '../../components/Burger/Burger';
-import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+// import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+
+//NEW
+import BuildControls from '../../components/Burger/BuildControls-n/BuildControls';
+import { selectAddedIngredientsTypeMapBuildControlsData, selectTotalPrice } from '../../store/selectors/burgerBuilder';
 
 class BurgerBuilder extends Component {
   state = {
@@ -17,6 +21,10 @@ class BurgerBuilder extends Component {
     }
 
   componentDidMount() {
+    //NEW
+    this.props.initBuildingIngredients();
+    this.props.initAddedIngredients();
+
     this.props.onInitIngredients();
   }
 
@@ -56,7 +64,16 @@ class BurgerBuilder extends Component {
     return (
       <React.Fragment>
         <Burger ingredients={this.props.ingredients} />
-        <BuildControls
+
+        {/* NEW */}
+        <BuildControls 
+          controlTypesMapData={this.props.ingredientsTypeMapBuildControlData}
+        />
+
+        {this.props.burgerPrice}
+
+
+        {/* <BuildControls
           ingredients={this.props.ingredients}
           onIngredientAdd={this.props.onIngredientAdd}
           onIngredientRemove={this.props.onIngredientRemove}
@@ -64,7 +81,7 @@ class BurgerBuilder extends Component {
           price={this.props.totalPrice}
           isPurchasable={this.checkIsPurchasable(this.props.ingredients)}
           onOrder={this.purchaseHandler}
-          isAuth={this.props.isAuth} />
+          isAuth={this.props.isAuth} /> */}
       </React.Fragment>
     );
 
@@ -97,6 +114,11 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
+    //NEW
+    buildingIngredients: state.burgerBuilder.get('buildingIngredients'),
+    ingredientsTypeMapBuildControlData: selectAddedIngredientsTypeMapBuildControlsData(state.burgerBuilder),
+    burgerPrice: selectTotalPrice(state.burgerBuilder),
+
     ingredients: state.burgerBuilder.get('ingredients'),
     totalPrice: state.burgerBuilder.get('totalPrice'),
     error: state.burgerBuilder.get('error'),
@@ -106,6 +128,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
+    //NEW
+    initBuildingIngredients: () => dispatch(actions.initBuildingIngredients()),
+    initAddedIngredients: () => dispatch(actions.initAddedIngredients()),
+
     onIngredientAdd: (ingredientKey) => dispatch(actions.addIngredient(ingredientKey)),
     onIngredientRemove: (ingredientKey) => dispatch(actions.removeIngredient(ingredientKey)),
     onInitIngredients: () => dispatch(actions.initIngredients()),

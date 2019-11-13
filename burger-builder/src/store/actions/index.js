@@ -1,4 +1,8 @@
 export {
+  //NEW
+  initBuildingIngredients,
+  initAddedIngredients,
+
   addIngredient,
   removeIngredient ,
   initIngredients

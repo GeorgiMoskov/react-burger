@@ -2,7 +2,7 @@ import * as AT from '../actions/actionTypes';
 import * as API_ING from '../../constants/burger/ingredients/api.ingredients';
 import axios from '../../axios-orders';
 
-import { Map, fromJS } from 'immutable';
+import { List, fromJS } from 'immutable';
 
 export const addIngredient = (ingredientKey) => {
   return {
@@ -34,6 +34,75 @@ export const fetchIngredientsFailed = () => {
     type: AT.FETCH_INGREDIENTS_FAILED
   }
 }
+
+//NEW
+const setAddedIngredients = (addedIngredientsList) => {
+  return {
+    type: AT.SET_ADDED_INGREDIENTS,
+    addedIngredientsList: addedIngredientsList
+  }
+}
+
+//NEW
+const fetchInitIngsOrderFailed = () =>{
+  return {
+    type: AT.FETCH_INIT_INGREDIENTS_ORDER_FAILED
+  }
+}
+
+//NEW
+const mapResInitialIngredientsOrder = (initialIngredientsOrder) => {
+  return Object.keys({...initialIngredientsOrder}).map(id => initialIngredientsOrder[id]);
+}
+
+//NEW
+export const initAddedIngredients = () => {
+  return dispatch => {
+    axios.get('/initial-ingredients-order.json')
+      .then(res => {
+        const initialIngredientsOrderList = List(mapResInitialIngredientsOrder(res.data));
+        dispatch(setAddedIngredients(initialIngredientsOrderList));
+      })
+      .catch(error => {
+        dispatch(fetchInitIngsOrderFailed());
+      })
+  }
+}
+
+//NEW
+const setBuildingIngredients = (buildingIngredientsList) => {
+  return {
+    type: AT.SET_BUILDING_INGREDIENTS,
+    buildingIngredientsList: buildingIngredientsList
+  }
+}
+//NEW
+const fetchBuildingIngsFailed = () => {
+  return {
+    type: AT.FETCH_BUILDING_INGREDIENTS_FAILED
+  }
+}
+
+//NEW
+const mapResBuildingIngredients = (resBuildingIngredients) => {
+  return Object.keys({...resBuildingIngredients}).map((id) => resBuildingIngredients[id]);
+}
+
+//NEW
+export const initBuildingIngredients = () => {
+  return dispatch => {
+    axios.get('/building-ingredients.json')
+      .then(res => {
+        const buildingIngredientsList = List(mapResBuildingIngredients(res.data));
+        dispatch(setBuildingIngredients(buildingIngredientsList));
+      })
+      .catch(error => {
+        dispatch(fetchBuildingIngsFailed());
+      })
+  }
+}
+
+
 
 const mapResIngredients = (resIngredients) => {
   const ingredients = {};
