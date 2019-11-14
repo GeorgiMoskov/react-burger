@@ -11,6 +11,8 @@ export {
 } from './burgerBuilder';
 
 export {
+  resetIsPurchased,
+
   purchaseInit,
   purchaseBurger,
   fetchOrders

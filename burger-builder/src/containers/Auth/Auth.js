@@ -18,12 +18,6 @@ class Auth extends Component {
     isRegister: false
   }
 
-  componentDidMount() {
-    if(!this.props.isBuildingBurger && this.props.afterAuthRedirectPath !== '/') {
-      this.props.setAfterAuthRedirectPath();
-    }
-  }
-
   submitHandler = (event) => {
     event.preventDefault();
     this.props.onAuth(
@@ -58,6 +52,7 @@ class Auth extends Component {
     let authRedirect = null;
     if (this.props.isAuth) {
       authRedirect = <Redirect to={this.props.afterAuthRedirectPath} />
+      this.props.setAfterAuthRedirectPath();
     }
 
     return (
@@ -83,7 +78,6 @@ const mapStateToProps = state => {
     loading: state.auth.get('loading'),
     error: state.auth.get('error'),
     isAuth: state.auth.get('token') !== null,
-    isBuildingBurger: state.burgerBuilder.get('isBuilding'),
     afterAuthRedirectPath: state.auth.get('afterAuthRedirectPath')
   }
 }

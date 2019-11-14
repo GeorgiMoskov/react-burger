@@ -2,6 +2,10 @@ import * as AT from './actionTypes';
 import axios from '../../axios-orders';
 import { fromJS } from 'immutable';
 
+export const resetIsPurchased = () => ({
+  type: AT.RESET_IS_PURCHASED
+});
+
 export const purchaseBurgerSuccess = () => {
   return {
     type: AT.PURCHASE_BURGER_SUCCESS,

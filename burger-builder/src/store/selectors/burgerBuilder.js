@@ -3,10 +3,15 @@ import { createSelector } from 'reselect';
 import * as UI_ING from '../../constants/burger/ingredients/ui.ingredients';
 
 const selectBuildingIngs = state => state.get('buildingIngredients');
-const selectIngredientsOrder = state => state.get('addedIngredients');
+const selectAddedIngredients = state => state.get('addedIngredients');
+
+export const selectIsAnyAddedIngredients = createSelector(
+  [selectAddedIngredients],
+  (addedIngredients) => addedIngredients ? !addedIngredients.isEmpty() : true
+)
 
 export const selectAddedIngredientsTypeAmountMap = createSelector(
-  [selectBuildingIngs, selectIngredientsOrder],
+  [selectBuildingIngs, selectAddedIngredients],
   (buildingIngredients, addedIngredients) => {
     const addedIngredientsTypeAmount = {};
     buildingIngredients.forEach(buildingIngredient => {
@@ -30,7 +35,7 @@ export const selectAddedIngredientsTypeMapBuildControlsData = createSelector(
 )
 
 export const selectTotalPrice = createSelector(
-  [selectBuildingIngs, selectIngredientsOrder],
+  [selectBuildingIngs, selectAddedIngredients],
   (buildingIngredientsList, addedIngredients) => {
     const buildingIngredientsMapTypePrice = Map(buildingIngredientsList
       .map(buildingIngData => [buildingIngData.get('type'), buildingIngData.get('price')]));
@@ -38,6 +43,7 @@ export const selectTotalPrice = createSelector(
     const totalPrice = addedIngredients.reduce((totalPrice, addedIngredient) => {
       return buildingIngredientsMapTypePrice.get(addedIngredient.get('type')) + totalPrice;
     }, 0);
-    return totalPrice;
+
+    return isNaN(totalPrice)? 0 : totalPrice;
   }
 )

@@ -14,6 +14,8 @@ import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
 import FormBuilder from '../../../components/UI/FormBuilder/FormBuilder';
 
+import { selectTotalPrice } from '../../../store/selectors/burgerBuilder';
+
 
 class ContactData extends Component {
   state = {
@@ -52,7 +54,7 @@ class ContactData extends Component {
 
     const order = {
       userId: this.props.userId,
-      ingredients: this.props.ingredients,
+      ingredients: this.props.addedIngredients,
       price: this.props.price,
       orderData: formData
     }
@@ -79,9 +81,11 @@ class ContactData extends Component {
 
 const mapStateToProps = state => {
   return {
-    ingredients: state.burgerBuilder.get('ingredients'),
-    price: state.burgerBuilder.get('totalPrice'),
-    loading: state.order.get('loading'),
+    addedIngredients: state.burgerBuilder.get('addedIngredients'),
+    price: selectTotalPrice(state.burgerBuilder),
+    // ingredients: state.burgerBuilder.get('ingredients'),
+    // price: state.burgerBuilder.get('totalPrice'),
+    // loading: state.order.get('loading'),
     token: state.auth.get('token'),
     userId: state.auth.get('userId')
   }

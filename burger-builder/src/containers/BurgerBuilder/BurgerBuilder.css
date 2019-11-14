@@ -1,0 +1,12 @@
+.BurgerBuilder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.TotalPrice {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #CF8F2E;
+  padding: 10px;
+}

@@ -22,6 +22,8 @@ const purchaseBurgerSuccess = (state) => {
   })
 };
 
+const resetIsPurchased = (state) => state.set('isPurchased', false);
+
 const purchaseBurgerFail = (state, {error}) => {
   console.error('Error Purchase Burger =>', error);
   return state.set('loading', false);
@@ -48,6 +50,8 @@ const reducer = (state = initialState, action) => {
     case AT.PURCHASE_BURGER_START: return purchaseBurgerStart(state);
 
     case AT.PURCHASE_BURGER_SUCCESS: return purchaseBurgerSuccess(state, action);
+
+    case AT.RESET_IS_PURCHASED: return resetIsPurchased(state, action);
 
     case AT.PURCHASE_BURGER_FAIL: return purchaseBurgerFail(state);
     
