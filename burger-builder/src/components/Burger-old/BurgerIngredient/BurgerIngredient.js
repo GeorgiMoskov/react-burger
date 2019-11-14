@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import * as ING from '../../../constants/burger/ingredients/ingredients';
+
 import classes from './BurgerIngredient.css';
 
 class BurgerIngredient extends Component {
@@ -37,7 +39,8 @@ class BurgerIngredient extends Component {
         break;
 
         case ING.SALAMI:
-          const salamiFats = [...Array(this.props.config.get('fats'))].map((_, index) => {
+          const randSalamiFatNumber = Math.floor(Math.random() * (6 - 4 + 1) ) + 4;
+          const salamiFats = [...Array(randSalamiFatNumber)].map((_, index) => {
             return <div key={index} className={classes.SalamiFat}></div>
           })
 
@@ -55,5 +58,9 @@ class BurgerIngredient extends Component {
     return ingredient;
   }
 }
+
+BurgerIngredient.propTypes = {
+  type: PropTypes.string.isRequired,
+};
 
 export default BurgerIngredient;

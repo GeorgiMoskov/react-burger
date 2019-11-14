@@ -10,15 +10,13 @@ export const selectAddedIngredientsTypeAmountMap = createSelector(
   (buildingIngredients, addedIngredients) => {
     const addedIngredientsTypeAmount = {};
     buildingIngredients.forEach(buildingIngredient => {
-      addedIngredientsTypeAmount[buildingIngredient.type] = 0;
+      addedIngredientsTypeAmount[buildingIngredient.get('type')] = 0;
       addedIngredients.forEach(addedIngredient => {
-        if(buildingIngredient.type === addedIngredient.type) {
-          addedIngredientsTypeAmount[buildingIngredient.type]++;
+        if(buildingIngredient.get('type') === addedIngredient.get('type')) {
+          addedIngredientsTypeAmount[buildingIngredient.get('type')]++;
         }
       })
     });
-
-    console.log('selectAddedIngredientsTypeAmount', addedIngredientsTypeAmount);
     return Map(addedIngredientsTypeAmount);
   }
 )
@@ -33,12 +31,13 @@ export const selectAddedIngredientsTypeMapBuildControlsData = createSelector(
 
 export const selectTotalPrice = createSelector(
   [selectBuildingIngs, selectIngredientsOrder],
-  (buildingIngredients, addedIngredients) => {
-    const buildingIngredientsMapTypePrice = Map(buildingIngredients
-      .map(buildingIngData => [buildingIngData.type, buildingIngData.price]));
+  (buildingIngredientsList, addedIngredients) => {
+    const buildingIngredientsMapTypePrice = Map(buildingIngredientsList
+      .map(buildingIngData => [buildingIngData.get('type'), buildingIngData.get('price')]));
     
-    return addedIngredients.reduce((totalPrice, addedIngredient) => {
-      return buildingIngredientsMapTypePrice.get(addedIngredient.type) + totalPrice;
+    const totalPrice = addedIngredients.reduce((totalPrice, addedIngredient) => {
+      return buildingIngredientsMapTypePrice.get(addedIngredient.get('type')) + totalPrice;
     }, 0);
+    return totalPrice;
   }
 )

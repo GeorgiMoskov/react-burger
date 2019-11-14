@@ -1,4 +1,5 @@
 import * as AT from '../actions/actionTypes';
+import * as ING from '../../constants/burger/ingredients/ingredients';
 import { Map, List } from 'immutable';
 
 const initialState = Map({
@@ -16,24 +17,50 @@ const initialState = Map({
   isBuilding: false
 });
 
-const addIngredient = (state, { ingredientKey }) => {
-  return state.mergeDeep({
-    ingredients: {
-      [ingredientKey]: state.get('ingredients').get(ingredientKey) + 1
-    },
-    totalPrice: state.get('totalPrice') + state.get('ingredientsPrice').get(ingredientKey),
-    isBuilding: true
-  })
+//NEW
+const addIngredient = (state, { ingredientType }) => {
+  let config = null;
+  if(ingredientType === ING.SALAMI) {
+    config = Map({
+      fats: Math.floor(Math.random() * (6 - 4 + 1) ) + 4
+    })
+  }
+  const newAddedIngredients = state.get('addedIngredients').insert(0, Map({ type: ingredientType, config }));
+  return state.set('addedIngredients', newAddedIngredients);
 }
 
-const removeIngredient = (state, { ingredientKey }) => {
-  return state.mergeDeep({
-    ingredients: {
-      [ingredientKey]: state.get('ingredients').get(ingredientKey) - 1
-    },
-    totalPrice: state.get('totalPrice') - state.get('ingredientsPrice').get(ingredientKey)
-  })
+//NEW
+const removeIngredient = (state, { ingredientType, position }) => {
+  const removeIndex = (position || position === 0) ? 
+    position : 
+    state.get('addedIngredients').findIndex((ingData) => ingData.get('type') === ingredientType)
+
+  const newAddedIngredients = state.get('addedIngredients').remove(removeIndex);
+  return state.set('addedIngredients', newAddedIngredients);
+
+
 }
+
+//OLD
+// const addIngredient = (state, { ingredientKey }) => {
+//   return state.mergeDeep({
+//     ingredients: {
+//       [ingredientKey]: state.get('ingredients').get(ingredientKey) + 1
+//     },
+//     totalPrice: state.get('totalPrice') + state.get('ingredientsPrice').get(ingredientKey),
+//     isBuilding: true
+//   })
+// }
+
+//OLD
+// const removeIngredient = (state, { ingredientKey }) => {
+//   return state.mergeDeep({
+//     ingredients: {
+//       [ingredientKey]: state.get('ingredients').get(ingredientKey) - 1
+//     },
+//     totalPrice: state.get('totalPrice') - state.get('ingredientsPrice').get(ingredientKey)
+//   })
+// }
 
 const setIngredients = (state, {ingredients, ingredientsPrice}) => {
   return state.mergeDeep({

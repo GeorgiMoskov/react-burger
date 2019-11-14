@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from '../../axios-orders';
 import { connect } from 'react-redux';
-
 import * as actions from '../../store/actions/index';
 
 import Burger from '../../components/Burger/Burger';
@@ -12,7 +11,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 //NEW
-import BuildControls from '../../components/Burger/BuildControls-n/BuildControls';
+import BuildControls from '../../components/UI/BuildControls/BuildControls';
 import { selectAddedIngredientsTypeMapBuildControlsData, selectTotalPrice } from '../../store/selectors/burgerBuilder';
 
 class BurgerBuilder extends Component {
@@ -60,25 +59,29 @@ class BurgerBuilder extends Component {
     if(!this.props.ingredients) {
       return this.props.error ? <p>Ingredients can't be loaded</p> : <Spinner />
     }
-    const isRemoveIngredientDisabledConfig = this.props.ingredients.map(ingAmount => ingAmount <= 0);
     return (
       <React.Fragment>
-        <Burger ingredients={this.props.ingredients} />
-
         {/* NEW */}
+        <Burger ingredients={this.props.addedIngredients} />
         <BuildControls 
           controlTypesMapData={this.props.ingredientsTypeMapBuildControlData}
+          onControlTypeAdd={this.props.onAddIngredient}
+          onControlTypeRemove={this.props.onRemoveIngredient}
         />
 
         {this.props.burgerPrice}
 
 
-        {/* <BuildControls
+        {/* 
+        <Burger ingredients={this.props.ingredients} />
+        <BuildControls
           ingredients={this.props.ingredients}
           onIngredientAdd={this.props.onIngredientAdd}
           onIngredientRemove={this.props.onIngredientRemove}
           isRemoveIngredientDisabledConfig={isRemoveIngredientDisabledConfig}
           price={this.props.totalPrice}
+
+          
           isPurchasable={this.checkIsPurchasable(this.props.ingredients)}
           onOrder={this.purchaseHandler}
           isAuth={this.props.isAuth} /> */}
@@ -115,6 +118,7 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
   return {
     //NEW
+    addedIngredients: state.burgerBuilder.get('addedIngredients'),
     buildingIngredients: state.burgerBuilder.get('buildingIngredients'),
     ingredientsTypeMapBuildControlData: selectAddedIngredientsTypeMapBuildControlsData(state.burgerBuilder),
     burgerPrice: selectTotalPrice(state.burgerBuilder),
@@ -131,6 +135,8 @@ const mapDispatchToProps = dispatch => {
     //NEW
     initBuildingIngredients: () => dispatch(actions.initBuildingIngredients()),
     initAddedIngredients: () => dispatch(actions.initAddedIngredients()),
+    onAddIngredient: (ingredientType) => dispatch(actions.addIngredient(ingredientType)),
+    onRemoveIngredient: (ingredientKey) => dispatch(actions.removeIngredient(ingredientKey)),
 
     onIngredientAdd: (ingredientKey) => dispatch(actions.addIngredient(ingredientKey)),
     onIngredientRemove: (ingredientKey) => dispatch(actions.removeIngredient(ingredientKey)),

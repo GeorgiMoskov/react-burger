@@ -2,21 +2,39 @@ import * as AT from '../actions/actionTypes';
 import * as API_ING from '../../constants/burger/ingredients/api.ingredients';
 import axios from '../../axios-orders';
 
-import { List, fromJS } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
-export const addIngredient = (ingredientKey) => {
+//NEW
+export const addIngredient = (ingredientType) => {
   return {
-    type: AT.ADD_INGREDIENT,
-    ingredientKey: ingredientKey
-  };
-};
+        type: AT.ADD_INGREDIENT,
+        ingredientType: ingredientType
+      };
+}
 
-export const removeIngredient = (ingredientKey) => {
+export const removeIngredient = (ingredientType, position) => {
   return {
     type: AT.REMOVE_INGREDIENT,
-    ingredientKey: ingredientKey
-  };
-};
+    ingredientType,
+    position
+  }
+}
+
+//OLD
+// export const addIngredient = (ingredientKey) => {
+//   return {
+//     type: AT.ADD_INGREDIENT,
+//     ingredientKey: ingredientKey
+//   };
+// };
+
+//OLD
+// export const removeIngredient = (ingredientKey) => {
+//   return {
+//     type: AT.REMOVE_INGREDIENT,
+//     ingredientKey: ingredientKey
+//   };
+// };
 
 export const setIngredients = (ingredients, ingredientsPrice) => {
   /* FIXME: create startingPrice based on amount of default ingredients and base price.
@@ -52,7 +70,7 @@ const fetchInitIngsOrderFailed = () =>{
 
 //NEW
 const mapResInitialIngredientsOrder = (initialIngredientsOrder) => {
-  return Object.keys({...initialIngredientsOrder}).map(id => initialIngredientsOrder[id]);
+  return Object.keys({...initialIngredientsOrder}).map(id => fromJS(initialIngredientsOrder[id]));
 }
 
 //NEW
@@ -85,7 +103,7 @@ const fetchBuildingIngsFailed = () => {
 
 //NEW
 const mapResBuildingIngredients = (resBuildingIngredients) => {
-  return Object.keys({...resBuildingIngredients}).map((id) => resBuildingIngredients[id]);
+  return Object.keys({...resBuildingIngredients}).map((id) => fromJS(resBuildingIngredients[id]));
 }
 
 //NEW
