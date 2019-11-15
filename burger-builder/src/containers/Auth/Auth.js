@@ -18,6 +18,10 @@ class Auth extends Component {
     isRegister: false
   }
 
+  componentWillUnmount() {
+    this.props.setAfterAuthRedirectPath();
+  }
+
   submitHandler = (event) => {
     event.preventDefault();
     this.props.onAuth(

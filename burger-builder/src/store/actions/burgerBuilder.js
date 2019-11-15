@@ -1,21 +1,42 @@
 import * as AT from '../actions/actionTypes';
-// import * as API_ING from '../../constants/burger/ingredients/api.ingredients';
+import * as ING from '../../constants/burger/ingredients/ingredients';
 import axios from '../../axios-orders';
 
-import { List, fromJS } from 'immutable';
+import { List, Map, fromJS } from 'immutable';
 
 export const addIngredient = (ingredientType) => {
+  let config = null;
+  if(ingredientType === ING.SALAMI) {
+    config = Map({
+      fats: Math.floor(Math.random() * (6 - 4 + 1) ) + 4
+    })
+  }
+
   return {
         type: AT.ADD_INGREDIENT,
-        ingredientType: ingredientType
+        ingredientType,
+        config
       };
 }
 
-export const removeIngredient = (ingredientType, position) => {
+const removeIngredient = (position) => {
   return {
     type: AT.REMOVE_INGREDIENT,
-    ingredientType,
     position
+  }
+}
+
+export const removeIngredientByType = (ingredientType) => {
+  return (dispatch, getState) => {
+    const removeIndex = getState().burgerBuilder.get('addedIngredients')
+      .findIndex((ingData) => ingData.get('type') === ingredientType);
+      dispatch(removeIngredient(removeIndex));
+  }
+}
+
+export const removeIngredientByPosition = (position) => {
+  return dispatch => {
+    dispatch(removeIngredient(position));
   }
 }
 

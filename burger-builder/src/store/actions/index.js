@@ -3,11 +3,9 @@ export {
   initBuildingIngredients,
   initAddedIngredients,
   addIngredient,
-  removeIngredient,
+  removeIngredientByType,
+  removeIngredientByPosition,
 
-  // addIngredient,
-  //removeIngredient ,
-  initIngredients
 } from './burgerBuilder';
 
 export {

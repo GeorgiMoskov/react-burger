@@ -33,7 +33,7 @@ class BurgerBuilder extends Component {
         <BuildControls 
           controlTypesMapData={this.props.ingredientsTypeMapBuildControlData}
           onControlTypeAdd={this.props.onAddIngredient}
-          onControlTypeRemove={this.props.onRemoveIngredient}
+          onControlTypeRemove={this.props.onRemoveIngredientByType}
         />
         <div className={classes.TotalPrice}>
           {this.props.burgerPrice.toFixed(2) + ' usd'}
@@ -62,7 +62,7 @@ const mapDispatchToProps = dispatch => {
     initBuildingIngredients: () => dispatch(actions.initBuildingIngredients()),
     initAddedIngredients: () => dispatch(actions.initAddedIngredients()),
     onAddIngredient: (ingredientType) => dispatch(actions.addIngredient(ingredientType)),
-    onRemoveIngredient: (ingredientKey) => dispatch(actions.removeIngredient(ingredientKey)),
+    onRemoveIngredientByType: (ingredientKey) => dispatch(actions.removeIngredientByType(ingredientKey)),
   }
 }
 

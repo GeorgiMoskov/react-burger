@@ -1,9 +1,7 @@
 import * as AT from '../actions/actionTypes';
-import * as ING from '../../constants/burger/ingredients/ingredients';
 import { Map, List } from 'immutable';
 
 const initialState = Map({
-  //NEW
   buildingIngredients: List(),
   isErrorFetchBuildingIngs: false,
   addedIngredients: List(),
@@ -15,24 +13,13 @@ const initialState = Map({
   error: false,
 });
 
-const addIngredient = (state, { ingredientType }) => {
-  let config = null;
-  if(ingredientType === ING.SALAMI) {
-    config = Map({
-      fats: Math.floor(Math.random() * (6 - 4 + 1) ) + 4
-    })
-  }
+const addIngredient = (state, { ingredientType, config }) => {
   const newAddedIngredients = state.get('addedIngredients').insert(0, Map({ type: ingredientType, config }));
   return state.set('addedIngredients', newAddedIngredients);
 }
 
-const removeIngredient = (state, { ingredientType, position }) => {
-  const removeIndex = (position || position === 0) ? 
-    position : 
-    state.get('addedIngredients').findIndex((ingData) => ingData.get('type') === ingredientType)
-
-  const newAddedIngredients = state.get('addedIngredients').remove(removeIndex);
-  return state.set('addedIngredients', newAddedIngredients);
+const removeIngredient = (state, { position }) => {
+  return state.set('addedIngredients', state.get('addedIngredients').remove(position));
 }
 
 const setAddedIngredients = (state, {addedIngredientsList}) => {
