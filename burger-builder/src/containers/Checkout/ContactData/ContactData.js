@@ -83,8 +83,6 @@ const mapStateToProps = state => {
   return {
     addedIngredients: state.burgerBuilder.get('addedIngredients'),
     price: selectTotalPrice(state.burgerBuilder),
-    // ingredients: state.burgerBuilder.get('ingredients'),
-    // price: state.burgerBuilder.get('totalPrice'),
     // loading: state.order.get('loading'),
     token: state.auth.get('token'),
     userId: state.auth.get('userId')

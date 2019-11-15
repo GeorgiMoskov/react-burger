@@ -41,7 +41,6 @@ export const removeIngredientByPosition = (position) => {
 }
 
 const setAddedIngredients = (addedIngredientsList) => {
-  // FIXME: create starting burger Price based on amount of default ingredients and base price.
   return {
     type: AT.SET_ADDED_INGREDIENTS,
     addedIngredientsList: addedIngredientsList
@@ -59,6 +58,7 @@ const mapResInitialIngredientsOrder = (initialIngredientsOrder) => {
   return Object.keys({...initialIngredientsOrder}).map(id => fromJS(initialIngredientsOrder[id]));
 }
 
+//TODO: Add starting price for empty burger
 export const initAddedIngredients = () => {
   return dispatch => {
     axios.get('/initial-ingredients-order.json')

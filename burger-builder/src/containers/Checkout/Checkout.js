@@ -55,7 +55,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  resetIsPurchased: () => dispatch(actions.resetIsPurchased())
+  resetIsPurchased: () => dispatch(actions.resetIsPurchased()),
 })
 
 
