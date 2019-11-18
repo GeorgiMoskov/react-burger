@@ -29,7 +29,7 @@ class BurgerBuilder extends Component {
   render() {
     return (
       <div className={classes.BurgerBuilder}>
-        <Burger changeIngredientPosition={this.props.changeIngredientPosition} ingredients={this.props.addedIngredients} />
+        <Burger onIngredientRemove={this.props.onRemoveIngredientByPosition} changeIngredientPosition={this.props.changeIngredientPosition} ingredients={this.props.addedIngredients} />
         <BuildControls 
           controlTypesMapData={this.props.ingredientsTypeMapBuildControlData}
           onControlTypeAdd={this.props.onAddIngredient}
@@ -63,6 +63,7 @@ const mapDispatchToProps = dispatch => {
     initAddedIngredients: () => dispatch(actions.initAddedIngredients()),
     onAddIngredient: (ingredientType) => dispatch(actions.addIngredient(ingredientType)),
     onRemoveIngredientByType: (ingredientKey) => dispatch(actions.removeIngredientByType(ingredientKey)),
+    onRemoveIngredientByPosition: (ingredientKey) => dispatch(actions.removeIngredientByPosition(ingredientKey)),
 
     //new
     changeIngredientPosition: (fromIndex, toIndex) => dispatch(actions.changeIngredientPosition(fromIndex, toIndex))

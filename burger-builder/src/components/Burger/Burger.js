@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
@@ -6,8 +6,7 @@ import classes from './Burger.css';
 import BurgerIngredientsList from './BurgerIngredientsList/BurgerIngredientsList';
 
 const burger = props => {
-  const { ingredients, changeIngredientPosition } = props;
-  
+  const { ingredients, changeIngredientPosition, onIngredientRemove } = props;
 
   const onDragEnd = result => {
     if(!result.source || !result.destination) return;
@@ -21,6 +20,7 @@ const burger = props => {
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps} className={classes.Burger}>
             <BurgerIngredientsList
+              onIngredientRemove={onIngredientRemove}
               ingredients={ingredients} >
                 {provided.placeholder}
             </BurgerIngredientsList>

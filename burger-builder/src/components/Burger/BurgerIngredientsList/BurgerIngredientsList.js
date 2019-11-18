@@ -5,7 +5,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import BurgerIngredient from '../BurgerIngredient/BurgerIngredient';
 import * as ING from '../../../constants/burger/ingredients/ingredients';
 
-const BurgerIngredientsList = ({ ingredients, children }) => {
+const BurgerIngredientsList = ({ ingredients, children, onIngredientRemove }) => {
   
   const renderIngredients = () => {
     const ingredientsComponents = ingredients.map((ingData, index) => (
@@ -14,7 +14,7 @@ const BurgerIngredientsList = ({ ingredients, children }) => {
         {(provided) => (
           <BurgerIngredient
             draggableProvided={provided}
-
+            onIngredientRemove={() => onIngredientRemove(index)}
             key={ingData.get('type') + index}
             type={ingData.get('type')}
             config={ingData.get('config')} />

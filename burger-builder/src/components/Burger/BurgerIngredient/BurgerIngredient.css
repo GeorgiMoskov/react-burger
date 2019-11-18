@@ -1,17 +1,47 @@
-.Ingredient {
-  margin: 1% 0;
+.WR {
+  border: 2.5px solid rgba(255,255,255,.0);
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
 }
 
+.RemoveButton {
+  width: 50%;
+  height: 100%;
+  background-color: rgba(255,11,155,.0);
+  position: absolute;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+.Ingredient {
+  position: relative;
+  z-index: 200;
+}
+
+.WRBreadBottom {
+  height: 13%;
+}
 .BreadBottom {
-    height: 13%;
+    box-sizing: border-box;
+    height: 100%;
     width: 80%;
     background: linear-gradient(#F08E4A, #e27b36);
     border-radius: 0 0 30px 30px;
     box-shadow: inset -15px 0 #c15711;
 }
 
+.WRBreadTop {
+  height: 20%;
+}
 .BreadTop {
-    height: 20%;
+    height: 100%;
     width: 80%;
     background: linear-gradient(#bc581e, #e27b36);
     border-radius: 50% 50% 0 0;
@@ -20,8 +50,8 @@
 }
 
 .Seeds1 {
-    width: 10%;
     height: 15%;
+    width: 10%;
     position: absolute;
     background-color: white;
     left: 30%;
@@ -33,8 +63,8 @@
 
 .Seeds1:after {
     content: "";
-    width: 100%;
     height: 100%;
+    width: 100%;
     position: absolute;
     background-color: white;
     left: -170%;
@@ -46,8 +76,8 @@
   
 .Seeds1:before {
     content: "";
-    width: 100%;
     height: 100%;
+    width: 100%;
     position: absolute;
     background-color: white;
     left: 180%;
@@ -58,8 +88,8 @@
   }
 
   .Seeds2 {
-    width: 10%;
     height: 15%;
+    width: 10%;
     position: absolute;
     background-color: white;
     left: 64%;
@@ -71,8 +101,8 @@
   
   .Seeds2:before {
     content: "";
-    width: 100%;
     height: 100%;
+    width: 100%;
     position: absolute;
     background-color: white;
     left: 150%;
@@ -82,37 +112,56 @@
     box-shadow: inset 1px 3px #c9c9c9;
   }
   
-
-.Meat {
-    width: 80%;
+.WRMeat {
     height: 8%;
+    width: 100%;
+}
+.Meat {
+    height: 100%;
+    width: 80%;
     background: linear-gradient(#7f3608, #702e05);
     border-radius: 15px;
 }
 
-.Cheese {
-    width: 80%;
+.WRCheese {
     height: 4.5%;
+    width: 100%;
+}
+.Cheese {
+    height: 100%;
+    width: 90%;
     background: linear-gradient(#f4d004, #d6bb22);
     border-radius: 20px;
 }
 
+.WRSalad {
+  height: 7%;
+  width: 100%;
+}
 .Salad {
+    height: 100%;
     width: 80%;
-    height: 7%;
     background: linear-gradient(#228c1d, #91ce50);
     border-radius: 20px;
 }
 
-.Bacon {
-    width: 80%;
+.WRBacon {
     height: 3%;
+    width: 100%;
+}
+.Bacon {
+    height: 100%;
+    width: 80%;
     background: linear-gradient(#bf3813, #c45e38);
 }
 
+.WRSalami {
+    height: 4%;
+    width: 100%;
+}
 .Salami {
+  height: 100%;
   width: 80%;
-  height: 4%;
   background: linear-gradient(#bf3813, #c45e38);
   border-radius: 90px;
   display: flex;
@@ -122,8 +171,8 @@
 
 .SalamiFat {
   content: "";
-  width: 5%;
   height: 50%;
+  width: 5%;
   border-radius: 90px;
   background-color: #fff;
 }
