@@ -4,15 +4,11 @@ export {
   addIngredient,
   removeIngredientByType,
   removeIngredientByPosition,
-
-  //new
   changeIngredientPosition
-
 } from './burgerBuilder';
 
 export {
   resetIsPurchased,
-
   purchaseInit,
   purchaseBurger,
   fetchOrders

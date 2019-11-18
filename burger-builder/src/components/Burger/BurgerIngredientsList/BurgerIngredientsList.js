@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 
 import { Draggable } from 'react-beautiful-dnd';
 
-import classes from './BurgerIngredientsList.css';
 import BurgerIngredient from '../BurgerIngredient/BurgerIngredient';
 import * as ING from '../../../constants/burger/ingredients/ingredients';
 
-const BurgerIngredientsList = ({ ingredients, droppableProvided={},  children }) => {
+const BurgerIngredientsList = ({ ingredients, children }) => {
   
   const renderIngredients = () => {
     const ingredientsComponents = ingredients.map((ingData, index) => (
@@ -30,12 +29,12 @@ const BurgerIngredientsList = ({ ingredients, droppableProvided={},  children })
 
 
   return (
-    <div ref={droppableProvided.innerRef} {...droppableProvided.droppableProps} className={classes.BurgerIngredientsList}>
-      <BurgerIngredient type={ING.BREAD_TOP} />
+    <Fragment>
+        <BurgerIngredient type={ING.BREAD_TOP} />
         {renderIngredients()}
         {children}
       <BurgerIngredient type={ING.BREAD_BOTTOM} />
-    </div>
+    </Fragment>
   )
 }
 

@@ -22,7 +22,6 @@ const removeIngredient = (state, { position }) => {
   return state.set('addedIngredients', state.get('addedIngredients').remove(position));
 }
 
-//NEW
 const changeIngredientPosition = (state, {fromIndex, toIndex}) => {
   const ingToMove = state.getIn(['addedIngredients', fromIndex]);
   let updatedList = state.get('addedIngredients').remove(fromIndex);
