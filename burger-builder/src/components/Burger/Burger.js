@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import classes from './Burger.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 import * as ING from '../../constants/burger/ingredients/ingredients';
+
+const BURGER_ID = 0;
 
 const burger = props => {
   const { ingredients } = props;
@@ -28,4 +30,4 @@ const burger = props => {
   );
 };
 
-export default burger;
+export default memo(burger);
