@@ -1,11 +1,20 @@
 .Burger {
     width: 100%;
-    margin: auto;
+    /* margin: auto; */
     height: 250px;
-    overflow: scroll;
     text-align: center;
     font-weight: bold;
     font-size: 1.2rem;
+    /* overflow: scroll; */
+
+    /* TODO: POSITION AND MARGINS */
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+    /* min-height: 0; */
+
 }
 
 @media (min-width: 500px) and (max-height: 400px) {

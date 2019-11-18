@@ -22,6 +22,14 @@ const removeIngredient = (state, { position }) => {
   return state.set('addedIngredients', state.get('addedIngredients').remove(position));
 }
 
+//NEW
+const changeIngredientPosition = (state, {fromIndex, toIndex}) => {
+  const ingToMove = state.getIn(['addedIngredients', fromIndex]);
+  let updatedList = state.get('addedIngredients').remove(fromIndex);
+  updatedList = updatedList.insert(toIndex, ingToMove);
+  return state.set('addedIngredients', updatedList);
+}
+
 const setAddedIngredients = (state, {addedIngredientsList}) => {
   return state
     .set('addedIngredients', addedIngredientsList)
@@ -56,6 +64,8 @@ const reducer = (state = initialState, action) => {
     case AT.ADD_INGREDIENT: return addIngredient(state, action);
 
     case AT.REMOVE_INGREDIENT: return removeIngredient(state, action);
+
+    case AT.CHANGE_INGREDIENT_POSITION: return changeIngredientPosition(state, action);
 
     default: return state;
   }

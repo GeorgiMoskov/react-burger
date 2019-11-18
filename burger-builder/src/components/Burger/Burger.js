@@ -1,32 +1,36 @@
 import React, { memo } from 'react';
 
-import classes from './Burger.css';
-import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
-import * as ING from '../../constants/burger/ingredients/ingredients';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-const BURGER_ID = 0;
+import classes from './Burger.css';
+import BurgerIngredientsList from './BurgerIngredientsList/BurgerIngredientsList';
 
 const burger = props => {
-  const { ingredients } = props;
+  const { ingredients, changeIngredientPosition } = props;
   
-  const renderIngredients = () => {
-    const ingredientsComponents = ingredients.map((ingData, index) => (
-      <BurgerIngredient 
-        key={ingData.get('type') + index}
-        type={ingData.get('type')}
-        config={ingData.get('config')} />
-      ))
-    return ingredientsComponents.isEmpty() ?
-      'No ingredients added' :
-      ingredientsComponents;
-  };
+
+  const onDragEnd = result => {
+    if(!result.source || !result.destination) return;
+    changeIngredientPosition(result.source.index, result.destination.index);
+  }
   
   return (
-    <div className={classes.Burger}>
-      <BurgerIngredient type={ING.BREAD_TOP} />
-        {renderIngredients()}
-      <BurgerIngredient type={ING.BREAD_BOTTOM} />
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="0">
+        {(provided) => (
+          <div className={classes.Burger}>
+            
+            <BurgerIngredientsList
+              droppableProvided={provided}
+
+              ingredients={ingredients} >
+                {provided.placeholder}
+            </BurgerIngredientsList>
+            
+          </div>
+        )}  
+      </Droppable>
+    </DragDropContext>
   );
 };
 

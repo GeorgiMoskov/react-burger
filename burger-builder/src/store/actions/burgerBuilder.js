@@ -26,6 +26,14 @@ const removeIngredient = (position) => {
   }
 }
 
+export const changeIngredientPosition = (fromIndex, toIndex) => {
+  return {
+    type: AT.CHANGE_INGREDIENT_POSITION,
+    fromIndex,
+    toIndex
+  }
+}
+
 export const removeIngredientByType = (ingredientType) => {
   return (dispatch, getState) => {
     const removeIndex = getState().burgerBuilder.get('addedIngredients')
