@@ -1,66 +1,64 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Fragment, useState } from 'react';
 import * as ING from '../../../constants/burger/ingredients/ingredients';
-
 import classes from './BurgerIngredient.css';
 
-class BurgerIngredient extends Component {
-  render() {
-    let ingredient = null;
+const BurgerIngredient = ({type, config, draggableProvided={}, onIngredientRemove}) => {
 
-    switch (this.props.type) {
-      case ING.BREAD_TOP:
-        ingredient = (
-          <div className={classes.BreadTop}>
-            <div className={classes.Seeds1}></div>
-            <div className={classes.Seeds2}></div>
-          </div>
-        );
+  let ingredientClass = null;
+  let ingredientWrapper = null;
+  let childrenOfIngredient = null;
+  switch (type) {
+    case ING.BREAD_TOP:
+      ingredientClass = classes.BreadTop;
+      ingredientWrapper = classes.WRBreadTop;
+      childrenOfIngredient = (
+        <Fragment>
+          <div className={classes.Seeds1}></div>
+          <div className={classes.Seeds2}></div>
+        </Fragment>
+      )
+      break;
+    case ING.BREAD_BOTTOM:
+      ingredientClass = classes.BreadBottom;
+      ingredientWrapper = classes.WRBreadBottom;
+      break;
+    case ING.MEAT:
+      ingredientClass = classes.Meat;
+      ingredientWrapper = classes.WRMeat;
+      break;
+    case ING.CHEESE:
+      ingredientClass = classes.Cheese;
+      ingredientWrapper = classes.WRCheese;
+      break;
+    case ING.SALAD:
+      ingredientClass = classes.Salad;
+      ingredientWrapper = classes.WRSalad;
+      break;
+    case ING.BACON:
+      ingredientClass = classes.Bacon;
+      ingredientWrapper = classes.WRBacon;
+      break;
+      case ING.SALAMI:
+        childrenOfIngredient = [...Array(config.get('fats'))].map((_, index) => (
+          <div key={index} className={classes.SalamiFat}></div>
+        ))
+        ingredientClass =classes.Salami;
+        ingredientWrapper = classes.WRSalami;
         break;
-
-      case ING.BREAD_BOTTOM:
-        ingredient = <div className={classes.BreadBottom}></div>;
-        break;
-
-      case ING.MEAT:
-        ingredient = <div className={classes.Meat}></div>;
-        break;
-
-      case ING.CHEESE:
-        ingredient = <div className={classes.Cheese}></div>;
-        break;
-
-      case ING.SALAD:
-        ingredient = <div className={classes.Salad}></div>;
-        break;
-
-      case ING.BACON:
-        ingredient = <div className={classes.Bacon}></div>;
-        break;
-
-        case ING.SALAMI:
-          const randSalamiFatNumber = Math.floor(Math.random() * (6 - 4 + 1) ) + 4;
-          const salamiFats = [...Array(randSalamiFatNumber)].map((_, index) => {
-            return <div key={index} className={classes.SalamiFat}></div>
-          })
-
-          ingredient = (
-            <div className={classes.Salami}>
-              {salamiFats}
-            </div>
-          );
-          break;
-
-      default:
-        ingredient = null;
-    }
-
-    return ingredient;
+    default:
+      ingredientClass = null;
   }
-}
 
-BurgerIngredient.propTypes = {
-  type: PropTypes.string.isRequired,
-};
+  return (
+    <div className={`${ingredientWrapper} ${classes.WR}`}
+      ref={draggableProvided.innerRef} 
+      {...draggableProvided.draggableProps}>
+        <div {...draggableProvided.dragHandleProps} className={`${ingredientClass} ${classes.Ingredient}`}>
+            {childrenOfIngredient}
+        </div>
+        {onIngredientRemove ? <div onClick={onIngredientRemove} className={classes.RemoveButton}>X</div> : null}
+    </div>
+  )
+}
 
 export default BurgerIngredient;

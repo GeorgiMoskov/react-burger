@@ -1,116 +1,72 @@
 import React, { Component } from 'react';
+//FIXME: improve axios instance naming
 import axios from '../../axios-orders';
 import { connect } from 'react-redux';
-
 import * as actions from '../../store/actions/index';
 
+import classes from './BurgerBuilder.css'
+
 import Burger from '../../components/Burger/Burger';
-import BuildControls from '../../components/Burger/BuildControls/BuildControls';
-import Modal from '../../components/UI/Modal/Modal';
-import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
+import BuildControls from '../../components/UI/BuildControls/BuildControls';
+import { selectAddedIngredientsTypeMapBuildControlsData, selectTotalPrice } from '../../store/selectors/burgerBuilder';
+import OrderBurger from './OrderBurger/OrderBurger';
+
 class BurgerBuilder extends Component {
-  state = {
-    isPurchaseInProgress: false
-    }
 
   componentDidMount() {
-    this.props.onInitIngredients();
-  }
-
-  checkIsPurchasable = (ingredients) => {
-    const totalAmount = ingredients
-      .reduce((totalAmount, ingAmount) => totalAmount + ingAmount);
-    return totalAmount > 0;
-  }
-
-  purchaseHandler = () => {
-    if(!this.props.isAuth) {
-      this.props.setAfterAuthRedirectPath('/checkout');
-      return this.props.history.push('/auth');
+    //TODO: SPINNER WHEN FETCHING INGREDIENTS
+    if(!this.props.isBuildingIngredientsInit) {
+      this.props.initBuildingIngredients();
     }
-
-    this.setState({
-      isPurchaseInProgress: true
-    })
-  }
-
-  purchaseCancelHandler = () => {
-    this.setState({
-      isPurchaseInProgress: false
-    })
-  }
-
-  purchaseContinueHandler = () => {
-    this.props.onInitPurchase();
-    this.props.history.push('/checkout');
-  }
-
-  renderBurger = () => {
-    if(!this.props.ingredients) {
-      return this.props.error ? <p>Ingredients can't be loaded</p> : <Spinner />
+    if(!this.props.isAddedIngredientsInit) {
+      this.props.initAddedIngredients();
     }
-    const isRemoveIngredientDisabledConfig = this.props.ingredients.map(ingAmount => ingAmount <= 0);
-    return (
-      <React.Fragment>
-        <Burger ingredients={this.props.ingredients} />
-        <BuildControls
-          ingredients={this.props.ingredients}
-          onIngredientAdd={this.props.onIngredientAdd}
-          onIngredientRemove={this.props.onIngredientRemove}
-          isRemoveIngredientDisabledConfig={isRemoveIngredientDisabledConfig}
-          price={this.props.totalPrice}
-          isPurchasable={this.checkIsPurchasable(this.props.ingredients)}
-          onOrder={this.purchaseHandler}
-          isAuth={this.props.isAuth} />
-      </React.Fragment>
-    );
-
-  }
-
-  renderOrderSummary = () => {
-    if(!this.props.ingredients) {
-      return null;
-    }
-    return (
-      <OrderSummary
-          ingredients={this.props.ingredients}
-          price={this.props.totalPrice}
-          onPurchaseCancel={this.purchaseCancelHandler}
-          onPurchaseContinue={this.purchaseContinueHandler} />
-      );
   }
 
   render() {
     return (
-      <React.Fragment>
-        <Modal shouldShow={this.state.isPurchaseInProgress} onModalClose={this.purchaseCancelHandler}>
-          {this.renderOrderSummary()}
-        </Modal>
-        {this.renderBurger()}
-      </React.Fragment>
+      <div className={classes.BurgerBuilder}>
+        <Burger onIngredientRemove={this.props.onRemoveIngredientByPosition} changeIngredientPosition={this.props.changeIngredientPosition} ingredients={this.props.addedIngredients} />
+        <BuildControls 
+          controlTypesMapData={this.props.ingredientsTypeMapBuildControlData}
+          onControlTypeAdd={this.props.onAddIngredient}
+          onControlTypeRemove={this.props.onRemoveIngredientByType}
+        />
+        <div className={classes.TotalPrice}>
+          {this.props.burgerPrice.toFixed(2) + ' usd'}
+        </div>
+        <OrderBurger />
+      </div>
     );
   }
 }
 
 const mapStateToProps = state => {
   return {
-    ingredients: state.burgerBuilder.get('ingredients'),
-    totalPrice: state.burgerBuilder.get('totalPrice'),
+    addedIngredients: state.burgerBuilder.get('addedIngredients'),
+    ingredientsTypeMapBuildControlData: selectAddedIngredientsTypeMapBuildControlsData(state.burgerBuilder),
+    burgerPrice: selectTotalPrice(state.burgerBuilder),
+    isBuildingIngredientsInit: state.burgerBuilder.get('isBuildingIngredientsInit'),
+    isAddedIngredientsInit: state.burgerBuilder.get('isAddedIngredientsInit'),
+
+    //TODO: CHECK THIS ERROR PROP
     error: state.burgerBuilder.get('error'),
-    isAuth: state.auth.get('token') !== null
   };
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    onIngredientAdd: (ingredientKey) => dispatch(actions.addIngredient(ingredientKey)),
-    onIngredientRemove: (ingredientKey) => dispatch(actions.removeIngredient(ingredientKey)),
-    onInitIngredients: () => dispatch(actions.initIngredients()),
-    onInitPurchase: () => dispatch(actions.purchaseInit()),
-    setAfterAuthRedirectPath: (path) => dispatch(actions.setAfterAuthRedirectPath(path))
+    initBuildingIngredients: () => dispatch(actions.initBuildingIngredients()),
+    initAddedIngredients: () => dispatch(actions.initAddedIngredients()),
+    onAddIngredient: (ingredientType) => dispatch(actions.addIngredient(ingredientType)),
+    onRemoveIngredientByType: (ingredientKey) => dispatch(actions.removeIngredientByType(ingredientKey)),
+    onRemoveIngredientByPosition: (ingredientKey) => dispatch(actions.removeIngredientByPosition(ingredientKey)),
+
+    //new
+    changeIngredientPosition: (fromIndex, toIndex) => dispatch(actions.changeIngredientPosition(fromIndex, toIndex))
   }
 }
 

@@ -1,34 +1,34 @@
-import React from 'react';
+import React, { memo, useState } from 'react';
 
-import { List, Seq } from 'immutable';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 
 import classes from './Burger.css';
-import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
-import * as ING from '../../constants/burger/ingredients/ingredients';
+import BurgerIngredientsList from './BurgerIngredientsList/BurgerIngredientsList';
 
 const burger = props => {
-  const { ingredients } = props;
-  
-  let ingredientsComponents = ingredients
-    .map((ingAmount, ingKey) => {  
-    return List(Array(ingAmount)).map((_, index) => {
-      return <BurgerIngredient key={ingKey + index} type={ingKey} />
-      })
-    })
-    .toList()
-    .flatten();
+  const { ingredients, changeIngredientPosition, onIngredientRemove } = props;
 
-  if (ingredientsComponents.size === 0) {
-    ingredientsComponents = <p>Please start adding ingredients!</p>;
+  const onDragEnd = result => {
+    if(!result.source || !result.destination) return;
+    if(result.source.index === result.destination.index) return;
+    changeIngredientPosition(result.source.index, result.destination.index);
   }
-
+  
   return (
-    <div className={classes.Burger}>
-      <BurgerIngredient type={ING.BREAD_TOP} />
-      {ingredientsComponents}
-      <BurgerIngredient type={ING.BREAD_BOTTOM} />
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Droppable droppableId="0">
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps} className={classes.Burger}>
+            <BurgerIngredientsList
+              onIngredientRemove={onIngredientRemove}
+              ingredients={ingredients} >
+                {provided.placeholder}
+            </BurgerIngredientsList>
+          </div>
+        )}  
+      </Droppable>
+    </DragDropContext>
   );
 };
 
-export default burger;
+export default memo(burger);

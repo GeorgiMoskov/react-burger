@@ -1,10 +1,14 @@
 export {
+  initBuildingIngredients,
+  initAddedIngredients,
   addIngredient,
-  removeIngredient ,
-  initIngredients
+  removeIngredientByType,
+  removeIngredientByPosition,
+  changeIngredientPosition
 } from './burgerBuilder';
 
 export {
+  resetIsPurchased,
   purchaseInit,
   purchaseBurger,
   fetchOrders
