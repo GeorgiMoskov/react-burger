@@ -29,7 +29,6 @@
   height: 13%;
 }
 .BreadBottom {
-    box-sizing: border-box;
     height: 100%;
     width: 80%;
     background: linear-gradient(#F08E4A, #e27b36);
