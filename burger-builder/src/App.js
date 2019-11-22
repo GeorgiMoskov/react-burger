@@ -18,12 +18,10 @@ class App extends Component {
     this.props.initAuthState();
   }
 
-
   render() {
     let routes = null;
 
-    if(this.props.authDidInit) {
-      routes = (
+    routes = (
         <Switch>
           <Route path="/auth" component={AsyncAuth} />
           {<Route path="/" exact component={BurgerBuilder} />}
@@ -31,18 +29,17 @@ class App extends Component {
         </Switch>
       );
       
-      if(this.props.isAuth) {
-        routes =(
-          <Switch>
-             <Route path="/orders" component={AsyncOrders} />
-             <Route path="/auth" component={AsyncAuth} />
-             <Route path="/logout" component={Logout} />
-             <Route path="/checkout" component={AsyncCheckout} />
-             <Route path="/" exact component={BurgerBuilder} />
-             <Redirect to="/" />
-          </Switch>
-        );
-      }
+    if(this.props.isAuth) {
+      routes =(
+        <Switch>
+           <Route path="/orders" component={AsyncOrders} />
+           <Route path="/auth" component={AsyncAuth} />
+           <Route path="/logout" component={Logout} />
+           <Route path="/checkout" component={AsyncCheckout} />
+           <Route path="/" exact component={BurgerBuilder} />
+           <Redirect to="/" />
+        </Switch>
+      );
     }
 
     return (
@@ -57,6 +54,7 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
+    //TODO: CHECK WHY WE NEED authDidInit;
     authDidInit: state.auth.get('authDidInit'),
     isAuth: state.auth.get('token') !== null
   }

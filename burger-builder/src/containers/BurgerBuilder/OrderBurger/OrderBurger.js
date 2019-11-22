@@ -69,9 +69,9 @@ class OrderBurger extends Component {
 
 const mapStateToProps = state => {
   return {
-    isAnyAddedIngredients: selectIsAnyAddedIngredients(state.burgerBuilder), 
-    addedIngredientsTypeMapAmount: selectAddedIngredientsTypeAmountMap(state.burgerBuilder),
-    burgerPrice: selectTotalPrice(state.burgerBuilder),
+    isAnyAddedIngredients: selectIsAnyAddedIngredients(state), 
+    addedIngredientsTypeMapAmount: selectAddedIngredientsTypeAmountMap(state),
+    burgerPrice: selectTotalPrice(state),
     isAuth: state.auth.get('token') !== null,
   };
 }

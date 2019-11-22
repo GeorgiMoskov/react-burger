@@ -2,8 +2,8 @@ import { Map } from 'immutable';
 import { createSelector } from 'reselect';
 import * as UI_ING from '../../constants/burger/ingredients/ui.ingredients';
 
-const selectBuildingIngs = state => state.get('buildingIngredients');
-const selectAddedIngredients = state => state.get('addedIngredients');
+const selectBuildingIngs = state => {return state.ingredients.get('buildingIngredients')};
+const selectAddedIngredients = state => state.ingredients.get('addedIngredients');
 
 export const selectIsAnyAddedIngredients = createSelector(
   [selectAddedIngredients],

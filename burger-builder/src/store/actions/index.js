@@ -1,11 +1,18 @@
 export {
+  startLoading,
+  stopLoading
+} from './loaders'
+
+export {
   initBuildingIngredients,
+  setBuildingIngredients,
   initAddedIngredients,
+  setAddedIngredients,
   addIngredient,
   removeIngredientByType,
-  removeIngredientByPosition,
+  removeIngredientByIndex,
   changeIngredientPosition
-} from './burgerBuilder';
+} from './ingredients'
 
 export {
   resetIsPurchased,
@@ -15,8 +22,11 @@ export {
 } from './order';
 
 export {
+  initAuthState,
+  setAuthState,
+
   auth,
   logout,
   setAfterAuthRedirectPath,
-  initAuthState
+  // initAuthState
 } from './auth';

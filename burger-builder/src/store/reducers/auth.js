@@ -1,5 +1,7 @@
 import * as AT from '../actions/actionTypes';
 
+import { SET_AUTH_STATE } from '../actions/actionTypes';
+
 import { Map } from 'immutable';
 
 
@@ -16,15 +18,15 @@ const authStart = (state) => {
   return state.mergeDeep({ error: null, loading: true })
 };
 
-const authSuccess = (state, {token, userId}) => {
-  return state.mergeDeep({
-    authDidInit: true,
-    token: token,
-    userId: userId,
-    error: null,
-    loading: false
-  })
-};
+// const authSuccess = (state, {token, userId}) => {
+//   return state.mergeDeep({
+//     authDidInit: true,
+//     token: token,
+//     userId: userId,
+//     error: null,
+//     loading: false
+//   })
+// };
 
 const authFail = (state, {error}) => {
   return state.mergeDeep({
@@ -47,17 +49,36 @@ const setAfterAuthRedirectPath = (state, {path}) => {
   });
 }
 
-const reducer = (state = initialState, action) => {
-  switch(action.type) {
-    case AT.AUTH_START: return authStart(state);
+const authSuccess = (state, {token, userId}) => {
+  return state.mergeDeep({
+    authDidInit: true,
+    token: token,
+    userId: userId,
+    error: null,
+    loading: false
+  })
+};
 
-    case AT.AUTH_SUCCESS: return authSuccess(state, action);
+const reducer = (state = initialState, { type, payload }) => {
+  switch(type) {
+    case SET_AUTH_STATE:
+      const { token, userId } = payload;
+      return state.mergeDeep({
+        token,
+        userId
+      })
+    
+  
+    //OLD
+    // case AT.AUTH_START: return authStart(state);
 
-    case AT.AUTH_FAIL: return authFail(state, action);
+    // case AT.AUTH_SUCCESS: return authSuccess(state, action);
 
-    case AT.AUTH_LOGOUT: return authLogout(state);
+    // case AT.AUTH_FAIL: return authFail(state, action);
 
-    case AT.SET_AFTER_AUTH_REDIRECT_PATH: return setAfterAuthRedirectPath(state, action);
+    // case AT.AUTH_LOGOUT: return authLogout(state);
+
+    // case AT.SET_AFTER_AUTH_REDIRECT_PATH: return setAfterAuthRedirectPath(state, action);
 
     default: return state;
   }

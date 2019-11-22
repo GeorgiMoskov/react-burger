@@ -17,7 +17,7 @@ import OrderBurger from './OrderBurger/OrderBurger';
 class BurgerBuilder extends Component {
 
   componentDidMount() {
-    //TODO: SPINNER WHEN FETCHING INGREDIENTS
+    //TODO: SPINNER WHEN FETCHING INGREDIENTS => GET FROM LOADERS state
     if(!this.props.isBuildingIngredientsInit) {
       this.props.initBuildingIngredients();
     }
@@ -29,7 +29,7 @@ class BurgerBuilder extends Component {
   render() {
     return (
       <div className={classes.BurgerBuilder}>
-        <Burger onIngredientRemove={this.props.onRemoveIngredientByPosition} changeIngredientPosition={this.props.changeIngredientPosition} ingredients={this.props.addedIngredients} />
+        <Burger onIngredientRemove={this.props.onRemoveIngredientByIndex} changeIngredientPosition={this.props.changeIngredientPosition} ingredients={this.props.addedIngredients} />
         <BuildControls 
           controlTypesMapData={this.props.ingredientsTypeMapBuildControlData}
           onControlTypeAdd={this.props.onAddIngredient}
@@ -46,14 +46,14 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = state => {
   return {
-    addedIngredients: state.burgerBuilder.get('addedIngredients'),
-    ingredientsTypeMapBuildControlData: selectAddedIngredientsTypeMapBuildControlsData(state.burgerBuilder),
-    burgerPrice: selectTotalPrice(state.burgerBuilder),
-    isBuildingIngredientsInit: state.burgerBuilder.get('isBuildingIngredientsInit'),
-    isAddedIngredientsInit: state.burgerBuilder.get('isAddedIngredientsInit'),
+    addedIngredients: state.ingredients.get('addedIngredients'),
+    ingredientsTypeMapBuildControlData: selectAddedIngredientsTypeMapBuildControlsData(state),
+    burgerPrice: selectTotalPrice(state),
+    isBuildingIngredientsInit: state.ingredients.get('isBuildingIngredientsInit'),
+    isAddedIngredientsInit: state.ingredients.get('isAddedIngredientsInit'),
 
-    //TODO: CHECK THIS ERROR PROP
-    error: state.burgerBuilder.get('error'),
+    //TODO: ADD on error UI
+    //error: state.BurgerBuilder.get('error'),
   };
 }
 
@@ -63,9 +63,7 @@ const mapDispatchToProps = dispatch => {
     initAddedIngredients: () => dispatch(actions.initAddedIngredients()),
     onAddIngredient: (ingredientType) => dispatch(actions.addIngredient(ingredientType)),
     onRemoveIngredientByType: (ingredientKey) => dispatch(actions.removeIngredientByType(ingredientKey)),
-    onRemoveIngredientByPosition: (ingredientKey) => dispatch(actions.removeIngredientByPosition(ingredientKey)),
-
-    //new
+    onRemoveIngredientByIndex: (ingredientKey) => dispatch(actions.removeIngredientByIndex(ingredientKey)),
     changeIngredientPosition: (fromIndex, toIndex) => dispatch(actions.changeIngredientPosition(fromIndex, toIndex))
   }
 }

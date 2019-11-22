@@ -2,6 +2,11 @@ import axios from 'axios';
 
 import * as AT from './actionTypes';
 
+import { 
+  INIT_AUTH_STATE,
+  SET_AUTH_STATE
+ } from './actionTypes';
+
 export const authStart = () => {
   return {
     type: AT.AUTH_START
@@ -82,7 +87,7 @@ export const setAfterAuthRedirectPath = (path) => {
   }
 };
 
-export const initAuthState = () => {
+export const initAuthState2 = () => {
   return dispatch => {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
@@ -101,3 +106,27 @@ export const initAuthState = () => {
     dispatch(startAuthTimeout(expirationDate.getTime() - new Date().getTime()));
   };
 };
+
+export const initAuthState = () => ({
+  type: INIT_AUTH_STATE
+});
+
+export const setAuthState = (token, userId) =>({
+  type: SET_AUTH_STATE,
+  payload: {
+    token,
+    userId
+  }
+})
+
+export const login = () => ({
+
+})
+
+// export const clearAuthState = () => ({
+//   type: CLEAR_AUTH_STATE
+// });
+
+// export const clearAuthLocalStorage = () => ({
+//   type: CLEAR_AUTH_LOCAL_STORAGE
+// })

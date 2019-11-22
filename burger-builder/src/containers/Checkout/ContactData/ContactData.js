@@ -82,7 +82,7 @@ class ContactData extends Component {
 const mapStateToProps = state => {
   return {
     addedIngredients: state.burgerBuilder.get('addedIngredients'),
-    price: selectTotalPrice(state.burgerBuilder),
+    price: selectTotalPrice(state),
     // loading: state.order.get('loading'),
     token: state.auth.get('token'),
     userId: state.auth.get('userId')
