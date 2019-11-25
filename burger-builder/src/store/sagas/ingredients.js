@@ -19,6 +19,7 @@ function* initBuildingIngredients() {
   } catch(e) {
     //TODO: ON FETCH FAIL
     console.error('INIT BUILDING INGREDIENTS');
+    return e;
   }
   yield put(stopLoading(INIT_BUILDING_INGREDIENTS_LOADER));
 }
@@ -31,6 +32,7 @@ function* initAddedIngredients() {
   } catch(e) {
     //TODO: ON FETCH FAIL
     console.error('INIT ADDED INGREDIENTS');
+    return e;
   }
   yield put(stopLoading(INIT_ADDED_INGREDIENTS_LOADER));
 }

@@ -15,18 +15,20 @@ export {
 } from './ingredients'
 
 export {
-  resetIsPurchased,
+  orderBurger,
+  setIsBurgerOrdered,
+
+  //resetIsPurchased,
   purchaseInit,
-  purchaseBurger,
+  // purchaseBurger,
   fetchOrders
 } from './order';
 
 export {
   initAuthState,
   setAuthState,
-
-  auth,
+  login,
+  register,
   logout,
   setAfterAuthRedirectPath,
-  // initAuthState
 } from './auth';

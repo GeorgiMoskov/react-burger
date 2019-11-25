@@ -1,33 +1,11 @@
+import { SET_IS_BURGER_ORDERED } from '../actions/actionTypes';
 import * as AT from '../actions/actionTypes';
 import { Map, List } from 'immutable';
 
 const initialState = Map({
   orders: List(),
-  loading: false,
-  isPurchased: false
+  isOrdered: false,
 });
-
-const purchaseInit = (state) => {
-  return state.set("isPurchased", false);
-};
-
-const purchaseBurgerStart = (state) => {
-  return state.set('loading', true);
-};
-
-const purchaseBurgerSuccess = (state) => {
-  return state.mergeDeep({
-    loading: false,
-    isPurchased: true
-  })
-};
-
-const resetIsPurchased = (state) => state.set('isPurchased', false);
-
-const purchaseBurgerFail = (state, {error}) => {
-  console.error('Error Purchase Burger =>', error);
-  return state.set('loading', false);
-};
 
 const fetchOrdersStart = (state) => {
   return state.set('loading', true);
@@ -45,22 +23,16 @@ const fetchOrdersFail = (state) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case AT.PURCHASE_INIT: return purchaseInit(state);
+    case SET_IS_BURGER_ORDERED: 
+      const { payload: { isBurgerOrdered } } = action;
+      return state.set('isOrdered', isBurgerOrdered);
 
-    case AT.PURCHASE_BURGER_START: return purchaseBurgerStart(state);
-
-    case AT.PURCHASE_BURGER_SUCCESS: return purchaseBurgerSuccess(state, action);
-
-    case AT.RESET_IS_PURCHASED: return resetIsPurchased(state, action);
-
-    case AT.PURCHASE_BURGER_FAIL: return purchaseBurgerFail(state);
-    
     case AT.FETCH_ORDERS_START: return fetchOrdersStart(state);
 
     case AT.FETCH_ORDERS_SUCCESS: return fetchOrdersSuccess(state, action);
 
     case AT.FETCH_ORDERS_FAIL: return fetchOrdersFail(state);
-      
+  
     default: return state;
   }
 };

@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
-//FIXME: improve axios instance naming
-import axios from '../../axios-orders';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
 import classes from './BurgerBuilder.css'
 
-import Burger from '../../components/Burger/Burger';
+import Burger from '../Burger/Burger';
 import Spinner from '../../components/UI/Spinner/Spinner';
-import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 
 import BuildControls from '../../components/UI/BuildControls/BuildControls';
 import { selectAddedIngredientsTypeMapBuildControlsData, selectTotalPrice } from '../../store/selectors/burgerBuilder';
@@ -29,7 +26,7 @@ class BurgerBuilder extends Component {
   render() {
     return (
       <div className={classes.BurgerBuilder}>
-        <Burger onIngredientRemove={this.props.onRemoveIngredientByIndex} changeIngredientPosition={this.props.changeIngredientPosition} ingredients={this.props.addedIngredients} />
+        <Burger />
         <BuildControls 
           controlTypesMapData={this.props.ingredientsTypeMapBuildControlData}
           onControlTypeAdd={this.props.onAddIngredient}
@@ -51,9 +48,6 @@ const mapStateToProps = state => {
     burgerPrice: selectTotalPrice(state),
     isBuildingIngredientsInit: state.ingredients.get('isBuildingIngredientsInit'),
     isAddedIngredientsInit: state.ingredients.get('isAddedIngredientsInit'),
-
-    //TODO: ADD on error UI
-    //error: state.BurgerBuilder.get('error'),
   };
 }
 
@@ -63,9 +57,7 @@ const mapDispatchToProps = dispatch => {
     initAddedIngredients: () => dispatch(actions.initAddedIngredients()),
     onAddIngredient: (ingredientType) => dispatch(actions.addIngredient(ingredientType)),
     onRemoveIngredientByType: (ingredientKey) => dispatch(actions.removeIngredientByType(ingredientKey)),
-    onRemoveIngredientByIndex: (ingredientKey) => dispatch(actions.removeIngredientByIndex(ingredientKey)),
-    changeIngredientPosition: (fromIndex, toIndex) => dispatch(actions.changeIngredientPosition(fromIndex, toIndex))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(BurgerBuilder, axios));
+export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);

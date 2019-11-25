@@ -24,11 +24,10 @@ class Auth extends Component {
 
   submitHandler = (event) => {
     event.preventDefault();
-    this.props.onAuth(
-      this.state[EMAIL],
-      this.state[PASSWORD],
-      this.state.isRegister
-    )
+    if(this.state.isRegister) {
+      return this.props.onRegister(this.state[EMAIL], this.state[PASSWORD]);
+    }
+    return this.props.onLogin(this.state[EMAIL], this.state[PASSWORD]);
   }
 
   onFormUpdate = (controlsValues, isFormValid) => {
@@ -88,7 +87,11 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onAuth: (email, password, isRegister) => dispatch(actions.auth(email, password, isRegister)),
+    onLogin: (email, password) => dispatch(actions.login(email, password)),
+    onRegister: (email, password) => dispatch(actions.register(email, password)),
+
+    //TODO: must be removed
+    //onAuth: (email, password, isRegister) => dispatch(actions.auth(email, password, isRegister)),
     setAfterAuthRedirectPath: () => dispatch(actions.setAfterAuthRedirectPath('/'))
   };
 }

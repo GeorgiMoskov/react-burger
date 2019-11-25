@@ -2,50 +2,27 @@ import * as AT from './actionTypes';
 import axios from '../../axios-orders';
 import { fromJS } from 'immutable';
 
-import { initAddedIngredients } from './'
+import { 
+  ORDER_BURGER,
+  SET_IS_BURGER_ORDERED
+ } from './actionTypes';
 
-export const resetIsPurchased = () => ({
-  type: AT.RESET_IS_PURCHASED
-});
-
-export const purchaseBurgerSuccess = () => {
+export const orderBurger = (orderData) => {
   return {
-    type: AT.PURCHASE_BURGER_SUCCESS,
-  };
+    type: ORDER_BURGER,
+    payload: {
+      orderData
+    }
+  }
 };
 
-export const purchaseBurgerFail = (error) => {
+export const setIsBurgerOrdered = (isBurgerOrdered=false) => {
   return {
-    type: AT.PURCHASE_BURGER_FAIL,
-    error: error
+    type: SET_IS_BURGER_ORDERED,
+    payload: {
+      isBurgerOrdered
+    }
   }
-}
-
-export const purchaseBurgerStart = () => {
-  return {
-    type: AT.PURCHASE_BURGER_START
-  }
-}
-
-export const purchaseInit = () => {
-  return {
-    type: AT.PURCHASE_INIT, 
-  }
-}
-
-export const purchaseBurger = (orderData, token) => {
-  return dispatch => {
-    dispatch(purchaseBurgerStart());
-
-    axios.post('/orders.json?auth=' + token, orderData)
-      .then(response => {
-        dispatch(purchaseBurgerSuccess());
-        dispatch(initAddedIngredients());
-      })
-      .catch(error => {
-        dispatch(purchaseBurgerFail(error));
-      });
-  };
 };
 
 export const fetchOrdersSuccess = (orders) => {

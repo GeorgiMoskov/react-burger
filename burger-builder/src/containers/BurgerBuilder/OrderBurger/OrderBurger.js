@@ -32,7 +32,6 @@ class OrderBurger extends Component {
     this.setState({shouldShowOrderSummary: false})
   }
   onOrderSummaryContinue = () => {
-    console.log('purchase continued')
     this.props.history.push('/checkout');
   }
 
@@ -45,7 +44,7 @@ class OrderBurger extends Component {
         shouldShow={true} 
         onModalClose={this.onOrderSummaryCancel}>
           <OrderSummary
-            ingredients={this.props.addedIngredientsTypeMapAmount.filter((ingType, ingAmount) => Boolean(ingAmount))}
+            ingredients={this.props.addedIngredientsTypeMapAmount.filter((ingAmount) => Boolean(ingAmount))}
             price={this.props.burgerPrice}
             onPurchaseCancel={this.onOrderSummaryCancel}
             onPurchaseContinue={this.onOrderSummaryContinue} />

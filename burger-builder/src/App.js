@@ -54,8 +54,6 @@ class App extends Component {
 
 const mapStateToProps = state => {
   return {
-    //TODO: CHECK WHY WE NEED authDidInit;
-    authDidInit: state.auth.get('authDidInit'),
     isAuth: state.auth.get('token') !== null
   }
 }
